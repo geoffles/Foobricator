@@ -50,12 +50,12 @@
 
 <p>Foobricate was also designed to make multiple files which match the same data set - so maybe a list of account balances, and customer profiles that automagically agree with eachother.</p>
 
-<p>The one caveat at this time is that it is very difficult to generate data with a separator between records without a trailing symbol... for now.</p>
+<p><strong>Test data can't just be random, it needs to be structured too</strong></p>
 
 <h2>
 <a id="how-does-it-work" class="anchor" href="#how-does-it-work" aria-hidden="true"><span class="octicon octicon-link"></span></a>How does it work?</h2>
 
-<p>Simply spec up your data, and foobricate! Simply drag and drop your JSON files, or use the command line:</p>
+<p>Simply spec up your data, and foobricate! You can drag and drop your JSON files on the executable, or use the command line:</p>
 
 <pre><code>&gt; Foobricate MyAwesomeSpec.json
 </code></pre>
@@ -81,14 +81,24 @@
     }],
     output:[{           
         type:"clipboardOutput",
-        targets:[{              
+        targets:[{
+            type:"literal",
+            value:"&lt;Accounts&gt;\n"
+        },{         
             type:"times",
             count:1000,
             targets:[{
                 type:"formatString",
-                format:"&lt;Account&gt;\n\t&lt;Name&gt;{0}&lt;/Name&gt;\n\t&lt;Surname&gt;{1}&lt;/Surname&gt;\n\t&lt;AccountBalance&gt;${2:####0.00}&lt;/AcountBalance&gt;\n&lt;/Account&gt;",
+                format:"    &lt;Account&gt;
+    &lt;Name&gt;{0}&lt;/Name&gt;
+    &lt;Surname&gt;{1}&lt;/Surname&gt;
+    &lt;AccountBalance&gt;${2:####0.00}&lt;/AcountBalance&gt;
+&lt;/Account&gt;",
                 source:{type:"reference", refersTo:"accountBalances"}
             }]
+        },{
+            type:"literal",
+            value:"&lt;/Accounts&gt;"
         }]
     }]
 }
@@ -96,22 +106,24 @@
 
 <p>Pops the following onto your clipboard:</p>
 
-<pre><code>&lt;Account&gt;
-    &lt;Name&gt;Joe&lt;/Name&gt;
-    &lt;Surname&gt;Soap&lt;/Surname&gt;
-    &lt;AccountBalance&gt;$-1111.98&lt;/AcountBalance&gt;
-&lt;/Account&gt;
-&lt;Account&gt;
-    &lt;Name&gt;Bob&lt;/Name&gt;
-    &lt;Surname&gt;Bloggs&lt;/Surname&gt;
-    &lt;AccountBalance&gt;$3535.95&lt;/AcountBalance&gt;
-&lt;/Account&gt;
-&lt;Account&gt;
-    &lt;Name&gt;Joe&lt;/Name&gt;
-    &lt;Surname&gt;Smith&lt;/Surname&gt;
-    &lt;AccountBalance&gt;$-9856.00&lt;/AcountBalance&gt;
-&lt;/Account&gt;
-... and another 997 more!
+<pre><code>&lt;Accounts&gt;
+    &lt;Account&gt;
+        &lt;Name&gt;Joe&lt;/Name&gt;
+        &lt;Surname&gt;Bloggs&lt;/Surname&gt;
+        &lt;AccountBalance&gt;$1978.25&lt;/AcountBalance&gt;
+    &lt;/Account&gt;
+    &lt;Account&gt;
+        &lt;Name&gt;John&lt;/Name&gt;
+        &lt;Surname&gt;Bloggs&lt;/Surname&gt;
+        &lt;AccountBalance&gt;$-3623.23&lt;/AcountBalance&gt;
+    &lt;/Account&gt;
+    &lt;Account&gt;
+        &lt;Name&gt;Joe&lt;/Name&gt;
+        &lt;Surname&gt;Smith&lt;/Surname&gt;
+        &lt;AccountBalance&gt;$-6995.71&lt;/AcountBalance&gt;
+    &lt;/Account&gt;
+    **... and another 997 more!**
+&lt;/Accounts&gt;
 </code></pre>
 
 <p>You can also output directly to a file, or even multiple files!</p>
@@ -127,12 +139,12 @@
 <a id="list-of-attributions" class="anchor" href="#list-of-attributions" aria-hidden="true"><span class="octicon octicon-link"></span></a>List of Attributions</h2>
 
 <ul>
-<li>Uses <a href="http://www.newtonsoft.com/json">Newtonsoft JSON.net</a>
-</li>
-<li>Uses <a href="http://www.newtonsoft.com/json">Newtonsoft JSON.net Schema</a>
-</li>
+<li>Uses <a href="http://www.newtonsoft.com/json">Newtonsoft JSON.net</a> (Version 6.0.8.18111)</li>
+<li>Uses <a href="http://www.newtonsoft.com/json">Newtonsoft JSON.net Schema</a> (Version 1.0.9.18628)</li>
 <li>The documentation can compiled into HTML using <a href="http://pandoc.org">Pandoc</a>. It uses a template derrived from <a href="https://github.com/jgm/pandoc-templates/blob/master/default.html5">here</a> (This may change).</li>
-<li>The HTML user doc is styled using <a href="https://gist.github.com/ryangray/1882525">buttondown.css</a> </li>
+<li>The HTML user doc is styled using <a href="https://gist.github.com/ryangray/1882525">buttondown.css</a>
+</li>
+<li>Support from <a href="http://www.dariel.co.za">Dariel</a>.</li>
 </ul>
 
 <h2>
