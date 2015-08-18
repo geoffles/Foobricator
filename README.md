@@ -17,7 +17,7 @@ Foobricate was also designed to make multiple files which match the same data se
 
 ## How does it work?
 
-Simply spec up your data, and foobricate! Simply drag and drop your JSON files, or use the command line:
+Simply spec up your data, and foobricate! You can drag and drop your JSON files on the executable, or use the command line:
 
 	> Foobricate MyAwesomeSpec.json
 	
@@ -99,8 +99,10 @@ Note that there is a limitation on the AGPL licensed JSON.net Schema which limit
 * Uses [Newtonsoft JSON.net](http://www.newtonsoft.com/json) (Version 6.0.8.18111)
 * Uses [Newtonsoft JSON.net Schema](http://www.newtonsoft.com/json) (Version 1.0.9.18628)
 * The documentation can compiled into HTML using [Pandoc](http://pandoc.org). It uses a template derrived from [here](https://github.com/jgm/pandoc-templates/blob/master/default.html5) (This may change).
-* The HTML user doc is styled using [buttondown.css](https://gist.github.com/ryangray/1882525) 
+* The HTML user doc is styled using [buttondown.css](https://gist.github.com/ryangray/1882525)
+* Support from [Dariel](http://www.dariel.co.za).
 
 ## Build instructions
 
 Simply checkout the source code, and build with Visual Studio. If you'd like to compile the user doc you can do so using Pandoc.
+
