@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Foobricator by geoffles</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Foobricator</h1>
+          <h2>Foobricate your most awesome data yet.</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/geoffles/Foobricator/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/geoffles/Foobricator/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/geoffles/Foobricator" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h1>
+<a id="foobricator" class="anchor" href="#foobricator" aria-hidden="true"><span class="octicon octicon-link"></span></a>Foobricator</h1>
+
+<p>Foobricate your most awesome test data yet.</p>
+
+<h2>
+<a id="what-is-it" class="anchor" href="#what-is-it" aria-hidden="true"><span class="octicon octicon-link"></span></a>What is it?</h2>
+
+<p>Have you ever found yourself in need of test data, but making that data is difficult? Introducing the <strong>Foobricator</strong>! </p>
+
+<p>The Foobricator is a Data Generation Tool written in C# that allows you to define a spec for your data in JSON and use it to create your data.</p>
+
+<h2>
+<a id="so-what-kind-of-data-can-i-foobricate" class="anchor" href="#so-what-kind-of-data-can-i-foobricate" aria-hidden="true"><span class="octicon octicon-link"></span></a>So what kind of data can I Foobricate?</h2>
+
+<p>Just about anything - SQL statements, XML, CSV Files, you name it.</p>
+
+<p>Foobricate was also designed to make multiple files which match the same data set - so maybe a list of account balances, and customer profiles that automagically agree with eachother.</p>
+
+<p>The one caveat at this time is that it is very difficult to generate data with a separator between records without a trailing symbol... for now.</p>
+
+<h2>
+<a id="how-does-it-work" class="anchor" href="#how-does-it-work" aria-hidden="true"><span class="octicon octicon-link"></span></a>How does it work?</h2>
+
+<p>Simply spec up your data, and foobricate! Simply drag and drop your JSON files, or use the command line:</p>
+
+<pre><code>&gt; Foobricate MyAwesomeSpec.json
+</code></pre>
+
+<p>Sample:</p>
+
+<pre><code>{
+    context: [{
+        name:"names", type:"listSampler", source:{ type:"stringList", values:["John", "Bob", "Joe"] }
+    }, {
+        name:"surnames", type:"listSampler", source:{ type:"stringList", values:["Smith", "Bloggs", "Soap"] }
+    }, {
+        name:"randomBalance",  type:"randomDecimal", upper: 10000, lower:-10000 
+    }, {
+        name:"accountBalances", type:"iterator", sources:[ { 
+                type:"singleValue", source: {type:"reference", refersTo:"names"} 
+            }, { 
+                type:"singleValue", source: {type:"reference", refersTo:"surnames"} 
+            }, { 
+                type:"singleValue", source: {type:"reference", refersTo:"randomBalance"} 
+            }               
+        ]
+    }],
+    output:[{           
+        type:"clipboardOutput",
+        targets:[{              
+            type:"times",
+            count:1000,
+            targets:[{
+                type:"formatString",
+                format:"&lt;Account&gt;\n\t&lt;Name&gt;{0}&lt;/Name&gt;\n\t&lt;Surname&gt;{1}&lt;/Surname&gt;\n\t&lt;AccountBalance&gt;${2:####0.00}&lt;/AcountBalance&gt;\n&lt;/Account&gt;",
+                source:{type:"reference", refersTo:"accountBalances"}
+            }]
+        }]
+    }]
+}
+</code></pre>
+
+<p>Pops the following onto your clipboard:</p>
+
+<pre><code>&lt;Account&gt;
+    &lt;Name&gt;Joe&lt;/Name&gt;
+    &lt;Surname&gt;Soap&lt;/Surname&gt;
+    &lt;AccountBalance&gt;$-1111.98&lt;/AcountBalance&gt;
+&lt;/Account&gt;
+&lt;Account&gt;
+    &lt;Name&gt;Bob&lt;/Name&gt;
+    &lt;Surname&gt;Bloggs&lt;/Surname&gt;
+    &lt;AccountBalance&gt;$3535.95&lt;/AcountBalance&gt;
+&lt;/Account&gt;
+&lt;Account&gt;
+    &lt;Name&gt;Joe&lt;/Name&gt;
+    &lt;Surname&gt;Smith&lt;/Surname&gt;
+    &lt;AccountBalance&gt;$-9856.00&lt;/AcountBalance&gt;
+&lt;/Account&gt;
+... and another 997 more!
+</code></pre>
+
+<p>You can also output directly to a file, or even multiple files!</p>
+
+<h2>
+<a id="licensing" class="anchor" href="#licensing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Licensing</h2>
+
+<p>Foobricator is licensed under AGPL. This is in part because of it's dependency on  Newtonsoft's JSON.net Schema. See Full text in LICENSE.txt.</p>
+
+<p>Note that there is a limitation on the AGPL licensed JSON.net Schema which limits you to 1000 validations per hour. Foobricator performs one validation per input file. If you have your own license for JSON.net Schema, you are exempt from this restriction.</p>
+
+<h2>
+<a id="list-of-attributions" class="anchor" href="#list-of-attributions" aria-hidden="true"><span class="octicon octicon-link"></span></a>List of Attributions</h2>
+
+<ul>
+<li>Uses <a href="http://www.newtonsoft.com/json">Newtonsoft JSON.net</a>
+</li>
+<li>Uses <a href="http://www.newtonsoft.com/json">Newtonsoft JSON.net Schema</a>
+</li>
+<li>The documentation can compiled into HTML using <a href="http://pandoc.org">Pandoc</a>. It uses a template derrived from <a href="https://github.com/jgm/pandoc-templates/blob/master/default.html5">here</a> (This may change).</li>
+<li>The HTML user doc is styled using <a href="https://gist.github.com/ryangray/1882525">buttondown.css</a> </li>
+</ul>
+
+<h2>
+<a id="build-instructions" class="anchor" href="#build-instructions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Build instructions</h2>
+
+<p>Simply checkout the source code, and build with Visual Studio. If you'd like to compile the user doc you can do so using Pandoc.</p>
+        </section>
+
+        <footer>
+          Foobricator is maintained by <a href="https://github.com/geoffles">geoffles</a><br>
+          This page was generated by <a href="https://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
+    </div>
+  </body>
+</html>
