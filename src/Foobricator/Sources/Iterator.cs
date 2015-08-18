@@ -8,6 +8,8 @@ namespace Foobricator.Sources
     public class Iterator: ISource, IDisposable, IDebugInfoProvider
     {
         private static readonly List<Iterator> _instances = new List<Iterator>();
+        public static IReadOnlyList<Iterator> Instances { get { return _instances.AsReadOnly(); } }
+
         public DebugInfo DebugInfo { get; set; }
 
         public static void NextAll()
@@ -18,26 +20,15 @@ namespace Foobricator.Sources
         public readonly IList<object> Sources;
         private IList<object> Items;
 
-        private Iterator()
+        public Iterator(IList<object> sources)
         {
             _instances.Add(this);
-        }
-
-        public Iterator(IList<object> sources) : this()
-        {
-            Sources = sources.Select(p => p is DataReference ? ((DataReference)p).Dereference() : p).ToList();
+            Sources = sources.Select(p => p is DataReference
+                ? ((DataReference) p).Dereference()
+                : p)
+                .ToList();
             Next();
         }
-
-        public Iterator(IEnumerable<DataReference> references)
-            : this(references.Select(p => p.Dereference()).ToList())
-        { }
-
-        public Iterator(DataReference reference) : this(new List<object>{reference.Dereference()})
-        {}
-
-        public Iterator(ISource source) : this(new List<object>{source})
-        {}
 
         private void Next()
         {
@@ -49,8 +40,6 @@ namespace Foobricator.Sources
                 .SelectMany(p => p)
                 .ToList();
         }
-
-
 
         private object GetItems(object p)
         {

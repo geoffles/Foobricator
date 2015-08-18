@@ -29,9 +29,11 @@ namespace Foobricator.Tests
         }
 
         [TestMethod]
-        public void ThenCustomClassesShouldPrintProperly()
+        public void ThenCustomClassesMustAcceptFormattingArguments()
         {
             var s = string.Format("{0}|{0,-10:A}|{0:B}", new Formatted());
+
+            Assert.AreEqual("Foo foo|FOO FOO   |Foo foo", s);
 
         }
     }

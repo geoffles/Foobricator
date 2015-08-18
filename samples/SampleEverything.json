@@ -18,7 +18,8 @@
 			{type:"tupleValue", index:2, source:{type:"iterator", sources: [{type:"stringList", values: ["a", "b", "cxxxx"]}] } },
 			{type:"singleValue", source: {type:"reference", refersTo:"padLefty"}},
 			{type:"singleValue", source: {type:"reference", refersTo:"fooSwitch"}},
-			{type:"singleValue", source: {type:"reference", refersTo:"wordsSubStr"}}
+			{type:"singleValue", source: {type:"reference", refersTo:"wordsSubStr"}},
+			{type:"singleValue", source: {type:"reference", refersTo:"myListSampler"}}
 		]}
     ],
     output: [

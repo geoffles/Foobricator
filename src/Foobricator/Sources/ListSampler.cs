@@ -15,7 +15,6 @@ namespace Foobricator.Sources
             ListItems = reference.Dereference() as IList<object>;
         }
 
-        public int Count { get; set; }
         public IList<object> ListItems { get; set; }
         public DebugInfo DebugInfo { get; set; }
 

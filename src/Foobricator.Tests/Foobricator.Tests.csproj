@@ -37,6 +37,10 @@
     <DocumentationFile>..\..\bin\Foobricator.Tests.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\3rdParty\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <Choose>
@@ -53,6 +57,12 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sources\WhenUsingAnIterator.cs" />
+    <Compile Include="Sources\WhenUsingAReference.cs" />
+    <Compile Include="Sources\WhenUsingAStringList.cs" />
+    <Compile Include="Sources\WhenUsingListSampler.cs" />
+    <Compile Include="TestTools\InjectObjectFactoryContext.cs" />
+    <Compile Include="TestTools\TestDataRandomizer.cs" />
     <Compile Include="WhenUsingStringFormat.cs" />
   </ItemGroup>
   <ItemGroup>
