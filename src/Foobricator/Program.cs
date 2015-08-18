@@ -85,9 +85,7 @@ namespace Foobricator
                     var contextItem = objectFactory.Create(item);
                     if (contextItem != null)
                     {
-                        context[name] = contextItem is IList<object>
-                            ? (IList<object>)contextItem
-                            : new List<object> { contextItem };
+                        context[name] = contextItem;
                     }
                 }
             }

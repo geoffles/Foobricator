@@ -12,10 +12,7 @@ namespace Foobricator.Sources
         {
             var list = reference.Dereference();
 
-            if (list.Count == 1)
-            {
-                Source = list[0] as ISource;
-            }
+            Source = list as ISource;
 
             Index = index;
         }

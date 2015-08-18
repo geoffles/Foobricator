@@ -10,7 +10,7 @@ namespace Foobricator.Sources
         public readonly ISource Source;
         public readonly IDictionary<object, object> Map;
 
-        public Switch(DataReference reference, IDictionary<object, object> map) : this(reference.Dereference().First() as ISource, map)
+        public Switch(DataReference reference, IDictionary<object, object> map) : this(reference.Dereference() as ISource, map)
         {
         }
 

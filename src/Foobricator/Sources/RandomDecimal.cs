@@ -3,7 +3,7 @@ using Foobricator.Tools;
 
 namespace Foobricator.Sources
 {
-    class RandomDecimal : ISource, IFormattable, IDebugInfoProvider
+    public class RandomDecimal : ISource, IFormattable, IDebugInfoProvider
     {
 
         public RandomDecimal(int lower, int upper)

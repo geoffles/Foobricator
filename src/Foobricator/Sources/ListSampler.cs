@@ -12,7 +12,7 @@ namespace Foobricator.Sources
 
         public ListSampler(DataReference reference)
         {
-            ListItems = reference.Dereference();
+            ListItems = reference.Dereference() as IList<object>;
         }
 
         public int Count { get; set; }

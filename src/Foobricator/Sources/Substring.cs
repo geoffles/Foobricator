@@ -11,7 +11,7 @@ namespace Foobricator.Sources
         public readonly ISource Source;
 
         public Substring(DataReference reference, int start, int? length = null)
-            : this(reference.Dereference().First() as ISource, start, length)
+            : this(reference.Dereference() as ISource, start, length)
         {
 
         }

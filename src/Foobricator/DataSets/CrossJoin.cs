@@ -11,8 +11,8 @@ namespace Foobricator.DataSets
 
         public CrossJoin(DataReference refA, DataReference refB )
         {
-            var a = refA.Dereference();
-            var b = refB.Dereference();
+            var a = refA.Dereference() as IList<object>;
+            var b = refB.Dereference() as IList<object>;
 
             _list = a.Join(b, p => 1, p => 1, (l, r) => new List<object> {l, r}).Cast<object>().ToList();
         }

@@ -45,17 +45,11 @@ namespace Foobricator.Output
         /// </summary>
         public void Evaluate(TextWriter writer)
         {
-            var dref = Reference.Dereference();
+            object row = Reference.Dereference();
 
-            object row = null;
-            if (dref.Count == 1)
+            if (row is ISource)
             {
-                row = dref[0];
-
-                if (row is ISource)
-                {
-                    row = ((ISource) row).GetItem();
-                }
+                row = ((ISource) row).GetItem();
             }
 
             writer.Write(string.Format(CultureInfo.InvariantCulture, Format + (SuppressEndLine ? string.Empty: Environment.NewLine), ((IList<object>)row).ToArray()));  

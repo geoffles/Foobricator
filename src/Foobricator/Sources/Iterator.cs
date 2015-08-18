@@ -25,15 +25,15 @@ namespace Foobricator.Sources
 
         public Iterator(IList<object> sources) : this()
         {
-            Sources = sources.Select(p => p is DataReference ? ((DataReference)p).Dereference().First() : p).ToList();
+            Sources = sources.Select(p => p is DataReference ? ((DataReference)p).Dereference() : p).ToList();
             Next();
         }
 
         public Iterator(IEnumerable<DataReference> references)
-            : this(references.Select(p => p.Dereference()).Select(p => p.First()).ToList())
+            : this(references.Select(p => p.Dereference()).ToList())
         { }
 
-        public Iterator(DataReference reference) : this(new List<object>{reference.Dereference().First()})
+        public Iterator(DataReference reference) : this(new List<object>{reference.Dereference()})
         {}
 
         public Iterator(ISource source) : this(new List<object>{source})
@@ -59,11 +59,7 @@ namespace Foobricator.Sources
             if (result is DataReference)
             {
                 var dref  = ((DataReference) result).Dereference();
-
-                if (dref.Count == 1)
-                {
-                    result = dref[0];
-                }
+                result = dref;
             }
 
             if (result is ISource)

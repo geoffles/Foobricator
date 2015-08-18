@@ -11,7 +11,7 @@ namespace Foobricator.Sources
         public readonly ISource Source;
 
         public PadLeft(DataReference reference, int length, char character)
-            : this(reference.Dereference().First() as ISource, length, character)
+            : this(reference.Dereference() as ISource, length, character)
         {
 
         }

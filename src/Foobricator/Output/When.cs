@@ -26,7 +26,7 @@ namespace Foobricator.Output
         public DebugInfo DebugInfo { get; set; }
 
         public When(DataReference reference, Op @operator, object rightHandSide)
-            :this(reference.Dereference().First() as ISource, @operator, rightHandSide)
+            :this(reference.Dereference() as ISource, @operator, rightHandSide)
         {
         }
 

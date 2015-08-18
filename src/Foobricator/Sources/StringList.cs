@@ -5,7 +5,7 @@ using Foobricator.Tools;
 
 namespace Foobricator.Sources
 {
-    class StringList: ISource, IDebugInfoProvider, IList<object>
+    public class StringList: ISource, IDebugInfoProvider, IList<object>
     {
         public readonly IList<object> Items;
 

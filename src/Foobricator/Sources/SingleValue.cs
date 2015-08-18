@@ -29,18 +29,7 @@ namespace Foobricator.Sources
 
         public string ToString(string format, IFormatProvider formatProvider)
         {
-            IList<object> values = Reference.Dereference();
-
-            if (values == null)
-            {
-                return string.Empty;
-            }
-            if (values.Count != 1)
-            {
-                return string.Empty;
-            }
-
-            object value = values[0];
+            object value = Reference.Dereference();
 
             if (value == null)
             {

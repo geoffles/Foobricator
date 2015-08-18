@@ -12,7 +12,7 @@ namespace Foobricator.Tools
         double RandomDouble();
     }
 
-    class DataRandomizer : IDataRandomizer
+    public class DataRandomizer : IDataRandomizer
     {
         private DataRandomizer()
         {
