@@ -1,0 +1,41 @@
+{
+		context: [{
+			name:"names", type:"listSampler", source:{ type:"stringList", values:["John", "Bob", "Joe"] }
+		}, {
+			name:"surnames", type:"listSampler", source:{ type:"stringList", values:["Smith", "Bloggs", "Soap"] }
+		}, {
+			name:"randomBalance",  type:"randomDecimal", upper: 10000, lower:-10000 
+		}, {
+			name:"accountBalances", type:"iterator", sources:[ { 
+					type:"singleValue", source: {type:"reference", refersTo:"names"} 
+				}, { 
+					type:"singleValue", source: {type:"reference", refersTo:"surnames"} 
+				}, { 
+					type:"singleValue", source: {type:"reference", refersTo:"randomBalance"} 
+				}				
+			]
+		}],
+		output:[{			
+			type:"clipboardOutput",
+			targets:[{
+				type:"literal",
+				value:"<Accounts>\n"
+			},{			
+				type:"times",
+				count:1000,
+				targets:[{
+					type:"formatString",
+					format:
+"	<Account>
+		<Name>{0}</Name>
+		<Surname>{1}</Surname>
+		<AccountBalance>${2:####0.00}</AcountBalance>
+	</Account>",
+					source:{type:"reference", refersTo:"accountBalances"}
+				}]
+			},{
+				type:"literal",
+				value:"</Accounts>"
+			}]
+		}]
+	}

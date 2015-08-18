@@ -1,0 +1,50 @@
+﻿{    context: [		{ name: "myList", type:"stringList", values: ["a", "b", "c"]},
+		
+		{ name: "words", type:"listSampler", source:{type:"stringList", values:["Huffi", "Muffi", "Guffi"]}},
+		{ name: "myListSampler", type:"listSampler", source:{type:"reference", refersTo:"myList"}},
+		{ name: "myListIterator", type:"iterator", sources: [{type:"listSampler", source: {type:"reference", refersTo:"myList"}}]},
+		{ name: "someDateYo", type:"randomDate", baseDate:"2015-01-01", rangeUp:2},
+		{ name: "someIntYo", type:"randomInt", upper:5, lower:2},
+		{ name: "someDecimalYo", type:"randomDecimal", upper:20, lower:10},
+		{ name: "padLefty", type:"padLeft", source:{type:"reference", refersTo:"myListSampler"}, length: 8, character: "P"},
+		{ name: "fooSwitch", type: "switch", map: [{key: "a", value:1},{key: "b", value:2},{key: "c", value:3}], source: {type:"reference", refersTo:"myListSampler"}},
+		{ name: "wordsSubStr", type:"subString", start:1, length:1, source:{type:"reference", refersTo:"words"}},
+		
+		{ name:"outputIt", type:"iterator", sources:[
+			{type:"singleValue", source:{type:"reference", refersTo:"myListIterator"}},
+			{type:"singleValue", source:{type:"reference", refersTo:"someDateYo"}},
+			{type:"singleValue", source:{type:"reference", refersTo:"someIntYo"}},
+			{type:"singleValue", source:{type:"reference", refersTo:"someDecimalYo"}},
+			{type:"tupleValue", index:2, source:{type:"iterator", sources: [{type:"stringList", values: ["a", "b", "cxxxx"]}] } },
+			{type:"singleValue", source: {type:"reference", refersTo:"padLefty"}},
+			{type:"singleValue", source: {type:"reference", refersTo:"fooSwitch"}},
+			{type:"singleValue", source: {type:"reference", refersTo:"wordsSubStr"}}
+		]}
+    ],
+    output: [
+		{
+			type:"clipboardOutput", 			
+			targets:[{				
+				type:"times", count: 100, targets: [
+					{
+						type: "formatString", 
+						format:"{0}|{1:yyyy-MM-dd}|{2,-5:000}|{3,10:00000.00#}|{4}|{5}|{6}|{7}|", 
+						source:{type: "reference", refersTo: "outputIt"}
+					}, {
+						type:"conditionalOutput", 
+						target:[{
+							type:"formatString",
+							format:"{0}",
+							source:{type: "reference", refersTo: "outputIt"}
+						}], 
+						when: {
+							source:{type:"reference", refersTo:"myListIterator"}, 
+							op:"NotEq", 
+							rightHandSide:"b"
+						}
+					}
+				]
+			}]
+		}
+	]
+}

@@ -13,7 +13,7 @@ Just about anything - SQL statements, XML, CSV Files, you name it.
 
 Foobricate was also designed to make multiple files which match the same data set - so maybe a list of account balances, and customer profiles that automagically agree with eachother.
 
-The one caveat at this time is that it is very difficult to generate data with a separator between records without a trailing symbol... for now.
+**Test data can't just be random, it needs to be structured too**
 
 ## How does it work?
 
@@ -42,36 +42,48 @@ Sample:
 		}],
 		output:[{			
 			type:"clipboardOutput",
-			targets:[{				
+			targets:[{
+				type:"literal",
+				value:"<Accounts>\n"
+			},{			
 				type:"times",
 				count:1000,
 				targets:[{
 					type:"formatString",
-					format:"<Account>\n\t<Name>{0}</Name>\n\t<Surname>{1}</Surname>\n\t<AccountBalance>${2:####0.00}</AcountBalance>\n</Account>",
+					format:"	<Account>
+		<Name>{0}</Name>
+		<Surname>{1}</Surname>
+		<AccountBalance>${2:####0.00}</AcountBalance>
+	</Account>",
 					source:{type:"reference", refersTo:"accountBalances"}
 				}]
+			},{
+				type:"literal",
+				value:"</Accounts>"
 			}]
 		}]
 	}
 
 Pops the following onto your clipboard:
 
-	<Account>
-		<Name>Joe</Name>
-		<Surname>Soap</Surname>
-		<AccountBalance>$-1111.98</AcountBalance>
-	</Account>
-	<Account>
-		<Name>Bob</Name>
-		<Surname>Bloggs</Surname>
-		<AccountBalance>$3535.95</AcountBalance>
-	</Account>
-	<Account>
-		<Name>Joe</Name>
-		<Surname>Smith</Surname>
-		<AccountBalance>$-9856.00</AcountBalance>
-	</Account>
-	... and another 997 more!
+	<Accounts>
+		<Account>
+			<Name>Joe</Name>
+			<Surname>Bloggs</Surname>
+			<AccountBalance>$1978.25</AcountBalance>
+		</Account>
+		<Account>
+			<Name>John</Name>
+			<Surname>Bloggs</Surname>
+			<AccountBalance>$-3623.23</AcountBalance>
+		</Account>
+		<Account>
+			<Name>Joe</Name>
+			<Surname>Smith</Surname>
+			<AccountBalance>$-6995.71</AcountBalance>
+		</Account>
+		**... and another 997 more!**
+	</Accounts>
 
 You can also output directly to a file, or even multiple files!
 
@@ -84,8 +96,8 @@ Note that there is a limitation on the AGPL licensed JSON.net Schema which limit
 
 ## List of Attributions
 
-* Uses [Newtonsoft JSON.net](http://www.newtonsoft.com/json)
-* Uses [Newtonsoft JSON.net Schema](http://www.newtonsoft.com/json)
+* Uses [Newtonsoft JSON.net](http://www.newtonsoft.com/json) (Version 6.0.8.18111)
+* Uses [Newtonsoft JSON.net Schema](http://www.newtonsoft.com/json) (Version 1.0.9.18628)
 * The documentation can compiled into HTML using [Pandoc](http://pandoc.org). It uses a template derrived from [here](https://github.com/jgm/pandoc-templates/blob/master/default.html5) (This may change).
 * The HTML user doc is styled using [buttondown.css](https://gist.github.com/ryangray/1882525) 
 

@@ -1,0 +1,450 @@
+{
+	"id" : "http://foobricator.github.com/spec-schema/20150818#",
+	"$schema" : "http://json-schema.org/draft-04/schema#",
+	"description" : "JSON Schema for data generation",	
+	"type" : "object",
+	"required" : ["context", "output"],
+	"properties" : {
+		"context" : {			
+			"type" : "array",
+			"items" : {
+				"$ref" : "#/definitions/allSources"
+			}
+		},
+		"output" : {			
+			"type" : "array",
+			"items" : {
+				"$ref" : "#/definitions/allRootOutputs"
+			}
+		}
+	},
+	"definitions" : {
+		"mapKeyValue" : {
+			"type" : "object",
+			"required" : ["key", "value"],
+			"properties" : {
+				"key": {"oneOf" : [{
+						"type": "string"
+					}, {
+						"type" : "number"						
+					},{
+						"type" : "integer"
+					}
+					]},
+				"value": {"oneOf" : [{
+						"type": "string"
+					}, {
+						"type" : "number"						
+					},{
+						"type" : "integer"
+					}
+					]}				
+			},
+			"additionalProperties" : false
+		},
+		"allSources" : {
+			"oneOf" : [{
+					"$ref" : "#/definitions/sources/stringList"
+				}, {
+					"$ref" : "#/definitions/sources/iterator"
+				}, {
+					"$ref" : "#/definitions/sources/reference"
+				}, {
+					"$ref" : "#/definitions/sources/listSampler"
+				}, {
+					"$ref" : "#/definitions/sources/singleValue"
+				}, {
+					"$ref" : "#/definitions/sources/randomDate"
+				}, {
+					"$ref" : "#/definitions/sources/randomInt"
+				}, {
+					"$ref" : "#/definitions/sources/randomDecimal"
+				}, {
+					"$ref" : "#/definitions/sources/tupleValue"
+				}, {
+					"$ref" : "#/definitions/sources/padLeft"
+				}, {
+					"$ref" : "#/definitions/sources/switch"
+				}, {
+					"$ref" : "#/definitions/sources/subString"
+				}
+			]
+		},
+		"allOutputs" : {
+			"oneOf" : [{
+					"$ref" : "#/definitions/outputs/formatString"
+				}, {
+					"$ref" : "#/definitions/outputs/times"
+				}, {
+					"$ref" : "#/definitions/outputs/conditionalOutput"
+				}, {
+					"$ref" : "#/definitions/outputs/literal"
+				}
+			]
+		}, 
+		"allRootOutputs" : {
+			"oneOf" : [{
+				"$ref" : "#/definitions/rootOutputs/fileOutput"
+			}, {
+				"$ref" : "#/definitions/rootOutputs/clipboardOutput"
+			}]
+		},
+		"rootOutputs" :{
+			"fileOutput" : {
+				"type" : "object",
+				"required" : ["filename", "targets"],
+				"properties" : {
+					"type" : {"type":"string", "pattern":"^fileOutput$"},
+					"filename" : {
+						"type" : "string"
+					},
+					"targets" : {
+						"type" : "array",
+						"items" : {
+							"$ref" : "#/definitions/allOutputs",
+							"minItems" : 1
+						}
+					}
+				},
+				"additionalProperties":false
+			},
+			"clipboardOutput" : {
+				"type" : "object",
+				"required" : ["targets"],
+				"properties" : {
+					"type" : {"type":"string", "pattern":"^clipboardOutput$"},
+					"targets" : {
+						"type" : "array",
+						"items" : {
+							"$ref" : "#/definitions/allOutputs",
+							"minItems" : 1
+						}
+					}
+				},
+				"additionalProperties":false
+			}
+		},
+		"outputs" : {
+			"literal" : {
+				"type": "object",
+				"required": ["type", "value"],
+				"properties":{
+					"type" : {"type":"string", "pattern":"^literal$"},
+					"value" : { 
+						"type":"string"
+					},
+				},
+				"additionalProperties" : false
+			},
+			"formatString" : {
+				"type" : "object",
+				"required" : ["type", "format", "source"],
+				"properties" : {
+					"type" : {
+						"type" : "string",
+						"pattern" : "^formatString"
+					},
+					"format" : {
+						"type" : "string"
+					},
+					"source" : {
+						"$ref" : "#/definitions/sources/reference"
+					},
+					"suppressEndLine":{
+						"type" : "boolean"
+					}
+				},
+				"additionalProperties" : false
+			},
+			"times" : {
+				"type" : "object",
+				"required" : ["type", "targets", "count"],
+				"properties" : {
+					"type" : {
+						"type" : "string",
+						"pattern" : "^times$"
+					},
+					"count" : {
+						"type" : "number",
+						"minValue" : 1
+					},
+					"targets" : {
+						"type" : "array",
+						"items" : {
+							"$ref" : "#/definitions/allOutputs"
+						}
+					},
+					"separator" : {
+						type:"string"
+					}
+				},
+				"additionalProperties" : false
+			},
+			"conditionalOutput" :{
+				"type": "object",
+				"required" : ["type", "target", "when"],
+				"properties" : {
+					"type" : {"type" : "string", "pattern": "^conditionalOutput$"},
+					"target" : {"type": "array", "items": {"$ref": "#/definitions/allOutputs" } },
+					"when" : {
+						"type" : "object",
+						"required" : ["source", "op", "rightHandSide"],
+						"properties" : {
+							"source" : { "$ref" : "#/definitions/allSources" },
+							"op" : {"type": "string"},
+							"rightHandSide": {"oneOf": [ {"type" : "string"}, { "anyOf": [{"type":"integer"}, {"type":"number"}] } ]}
+						},
+						"additionalProperties" : false
+					}
+				},
+				"additionalProperties": false
+			}
+		},
+		"sources" : {
+			"listSampler" : {
+				"type" : "object",
+				"required" : ["type", "source"],
+				"properties" : {
+					"type" : {
+						"type" : "string",
+						"pattern" : "^listSampler$"
+					},
+					"source" : {
+						"oneOf" : [{
+								"$ref" : "#/definitions/sources/stringList"
+							}, {
+								"$ref" : "#/definitions/sources/reference"
+							}
+						]
+					},
+					"name" : {
+						"type" : "string"
+					}
+				},
+				"additionalProperties" : false
+			},
+			"stringList" : {
+				"type" : "object",
+				"required" : ["type", "values"],
+				"properties" : {
+					"type" : {
+						"type" : "string",
+						"pattern" : "^stringList$"
+					},
+					"name" : {
+						"type" : "string"
+					},
+					"values" : {
+						"type" : "array",
+						"items" : {
+							"type" : "string"
+						}
+					}
+				},
+				"additionalProperties" : false
+			},
+			"iterator" : {
+				"type" : "object",
+				"required" : ["type", "sources"],
+				"properties" : {
+					"type" : {
+						"type" : "string",
+						"pattern" : "^iterator$"
+					},
+					"name" : {
+						"type" : "string"
+					},
+					"sources" : {
+						"type" : "array",
+						"minItems" : 1,
+						"items" : {
+							"$ref" : "#/definitions/allSources"
+						}
+					}
+				},
+				"additionalProperties" : false
+			},
+			"reference" : {
+				"type" : "object",
+				"required" : ["type", "refersTo"],
+				"properties" : {
+					"type" : {
+						"type" : "string",
+						"pattern" : "^reference$"
+					},
+					"refersTo" : {
+						"type" : "string"
+					}
+				},
+				"additionalProperties" : false
+			},
+			"singleValue" : {
+				"type" : "object",
+				"required" : ["type", "source"],
+				"properties" : {
+					"type" : {
+						"type" : "string",
+						"pattern" : "^singleValue$"
+					},
+					"source" : {
+						"oneOf" : [{
+								"$ref" : "#/definitions/sources/reference"
+							}
+						]
+					},
+					"name" : {
+						"type" : "string"
+					}
+				},
+				"additionalProperties" : false
+			},
+			"randomDate" : {
+				"type" : "object",
+				"required" : ["type", "baseDate", "rangeUp"],
+				"properties" : {
+					"name" : {
+						"type" : "string"
+					},
+					"type" : {
+						"type" : "string",
+						"pattern" : "^randomDate$"
+					},
+					"baseDate" : {
+						"type" : "string",
+						"pattern" : "^\\d{4}-\\d{2}-\\d{2}$"
+					},
+					"rangeUp" : {
+						"type" : "number",
+						"minValue" : 0
+					}
+				},
+				"additionalProperties" : false
+			},
+			"randomInt" : {
+				"title" : "Random Integer",
+				"description" : "Generate random integers between the upper and lower ranges.",
+				"type" : "object",
+				"required" : ["type", "upper", "lower"],
+				"properties" : {
+					"name" : {
+						"type" : "string"
+					},
+					"type" : {
+						"type" : "string",
+						"pattern" : "^randomInt$"
+					},
+					"upper" : {
+						"type" : "integer"
+					},
+					"lower" : {
+						"type" : "integer"
+					}
+				},
+				"additionalProperties" : false
+			},
+			"randomDecimal" : {
+				"title" : "Random Decimal",
+				"description" : "Generate random decimal numbers between the upper and lower ranges.",
+				"type" : "object",
+				"required" : ["type", "upper", "lower"],
+				"properties" : {
+					"name" : {
+						"type" : "string"
+					},
+					"type" : {
+						"type" : "string",
+						"pattern" : "^randomDecimal$"
+					},
+					"upper" : {
+						"type" : "integer"
+					},
+					"lower" : {
+						"type" : "integer"
+					}
+				},
+				"additionalProperties" : false
+			},
+			"tupleValue" : {
+				"type" : "object",
+				"required" : ["type", "source", "index"],
+				"properties" : {
+					"name" : {
+						"type" : "string"
+					},
+					"type" : {
+						"type" : "string",
+						"pattern" : "^tupleValue$"
+					},
+					"source" : {
+						"$ref" : "#/definitions/allSources"
+					},
+					"index" : {
+						"type" : "integer"
+					}
+				},
+				"additionalProperties" : false
+			},
+			"padLeft" : {
+				"type" : "object",
+				"required" : ["type", "source", "length", "character"],
+				"properties" : {
+					"type" : {
+						"type" : "string",
+						"pattern" : "^padLeft$"					
+					},
+					"source" : {
+						"$ref" : "#/definitions/allSources"
+					},
+					"length" : {
+						"type" : "integer",
+						"minValue": 0
+					},
+					"character" : {
+						"type" : "string",
+						"maxLength" : 1,
+						"minLength" : 1
+					},
+					"name" : {
+						"type": "string"
+					}
+				},
+				"additionalProperties" : false
+			},
+			"switch" : {
+				"type" : "object",
+				"required": ["type", "source", "map"],
+				"properties": {
+					"type" : {"type" : "string", "pattern": "^switch$"},
+					"map" : {
+						"type": "array",
+						"items" : {
+							"oneOf": [{
+								"type" : "object",
+								"required" : ["key", "value"],
+								"properties" : {
+									"key": {"oneOf":  [ {"type" : "string"}, { "anyOf": [{"type":"integer"}, {"type":"number"}] } ]},										 
+									"value": {"oneOf":  [ {"type" : "string"}, { "anyOf": [{"type":"integer"}, {"type":"number"}] } ]}
+								}
+							}]
+						}
+					},
+					"source": { "type":"object"},
+					"name" : { "type":"string" }
+				},
+				"additionalProperties":false				
+			},
+			"subString" : {
+				"type" : "object",
+				"required" : ["type", "source", "start"],
+				"properties" : {
+					"type" : {"type" : "string", "pattern" : "^subString$"},
+					"source" : {"$ref" : "#/definitions/allSources"},
+					"start" : {"type": "integer", "minValue": 0},
+					"length" : {"type" : "integer", "minValue": 1},
+					"name" : {"type": "string"}
+				},
+				"additionalProperties" : false				
+			}
+		}
+	}
+}

@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{016C42DE-F576-40BA-9954-98B65CD21F62}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Foobricator</RootNamespace>
+    <AssemblyName>Foobricate</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\bin\Foobricate.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\bin\Foobricate.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\3rdParty\Newtonsoft.Json.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Newtonsoft.Json.Schema">
+      <HintPath>..\3rdParty\Newtonsoft.Json.Schema.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Output\Literal.cs" />
+    <Compile Include="Sources\RandomInt.cs" />
+    <Compile Include="Sources\ISource.cs" />
+    <Compile Include="DataSets\CrossJoin.cs" />
+    <Compile Include="Sources\Iterator.cs" />
+    <Compile Include="Sources\RandomDate.cs" />
+    <Compile Include="Sources\RandomDecimal.cs" />
+    <Compile Include="Sources\SingleValue.cs" />
+    <Compile Include="Sources\StringList.cs" />
+    <Compile Include="Sources\TupleValue.cs" />
+    <Compile Include="Sources\PadLeft.cs" />
+    <Compile Include="Sources\Substring.cs" />
+    <Compile Include="Output\When.cs" />
+    <Compile Include="RootOutput\ClipboardOutput.cs" />
+    <Compile Include="Output\ConditionalOutput.cs" />
+    <Compile Include="RootOutput\FileOutput.cs" />
+    <Compile Include="Output\FormatString.cs" />
+    <Compile Include="Output\IOutput.cs" />
+    <Compile Include="RootOutput\IRootOutput.cs" />
+    <Compile Include="Output\Times.cs" />
+    <Compile Include="Parsing\ObjectFactory.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sources\ListSampler.cs" />
+    <Compile Include="Sources\Switch.cs" />
+    <Compile Include="Tests\WhenUsingStringFormat.cs" />
+    <Compile Include="Tools\DataRandomizer.cs" />
+    <Compile Include="Tools\DataReference.cs" />
+    <Compile Include="Tools\DebugInfo.cs" />
+    <Compile Include="Tools\IDebugInfoProvider.cs" />
+    <Compile Include="Tools\Log.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Schema.json" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
