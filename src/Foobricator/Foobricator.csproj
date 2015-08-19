@@ -45,9 +45,6 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\3rdParty\Newtonsoft.Json.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
@@ -91,7 +88,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sources\ListSampler.cs" />
     <Compile Include="Sources\Switch.cs" />
-    <Compile Include="Tests\WhenUsingStringFormat.cs" />
     <Compile Include="Tools\DataRandomizer.cs" />
     <Compile Include="Tools\DataReference.cs" />
     <Compile Include="Tools\DebugInfo.cs" />
@@ -113,8 +109,7 @@
   -->
   <Target Name="AfterBuild" Condition="'$(Configuration)|$(Platform)' == 'Portable|AnyCPU'">
     <MakeDir Directories="$(OutputPath)Portable" />
-    <Message Text="$(OutputPath)"/>
+    <Message Text="$(OutputPath)" />
     <Exec Command="&quot;$(MSBuildProgramFiles32)\Microsoft\ILMerge\ILMerge.exe&quot; /targetplatform:4  /out:Foobricate.exe ..\Foobricate.exe ..\Newtonsoft.Json.dll ..\Newtonsoft.Json.Schema.dll" WorkingDirectory="$(OutputPath)Portable" />
   </Target>
-  
 </Project>
