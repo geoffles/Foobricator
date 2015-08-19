@@ -26,46 +26,30 @@ namespace Foobricator
                     Log.Instance.Info("DebugLevelWarning detected. Set to {0}", debugInfo);
                 }
             });
+            var validationProvider = new RichValidationProvider();
+            args.Where(p => !p.StartsWith("/")).ToList().ForEach(p => ProcessInputFile(p, validationProvider));
 
-            args.Where(p => !p.StartsWith("/")).ToList().ForEach(ProcessInputFile);
-            
-
-            Console.WriteLine("Done.");
+            Log.Instance.Trace("Done.");
             Console.ReadKey();
         }
 
-        private static void PrintValidationMessage(ValidationError error, int tabs = 0)
-        {
-            string tabString = tabs != 0
-                ? String.Concat(Enumerable.Repeat("\t", tabs))
-                : "";
-
-            Console.WriteLine(tabString + error.Message);
-            error.ChildErrors.ToList().ForEach(p => PrintValidationMessage(p, tabs+1));
-        }
-
-        private static void ProcessInputFile(string filename)
+        private static void ProcessInputFile(string filename, IValidationProvider validationProvider)
         {
             Log.Instance.Info("Processing File {0}", filename);
-
-            var assembly = Assembly.GetExecutingAssembly();
-            const string resourceName = "Foobricator.Schema.json";
-            Stream manifestStream = assembly.GetManifestResourceStream(resourceName);
-            JSchema schema = JSchema.Load(new JsonTextReader(new StreamReader(manifestStream)));
+            
             var inputStream = new StreamReader(filename);
             JsonTextReader reader = new JsonTextReader(inputStream);
             
-            IList<ValidationError> messages;
-            
             var obj = JToken.ReadFrom(reader);
-            var result = obj.IsValid(schema, out messages);
+
+            var validationResult = validationProvider.Validate(obj);
 
 
-            Console.WriteLine("Valid: {0}", result);
+            Log.Instance.Info("Valid: {0}", validationResult.IsValid);
 
-            if (!result)
+            if (!validationResult.IsValid)
             {
-                messages.ToList().ForEach(p => PrintValidationMessage(p));
+                validationResult.PrintValidationMessages(Log.Instance);
                 return;
             }
 
@@ -97,7 +81,7 @@ namespace Foobricator
             {
                 string type = (string)item["type"];
 
-                Console.WriteLine("{0}:{1}", "output", type);
+                Log.Instance.Trace("{0}:{1}", "output", type);
 
                 var outputItem = (IRootOutput)objectFactory.Create(item);
 
@@ -116,7 +100,6 @@ namespace Foobricator
             }
 
             inputStream.Dispose();
-            manifestStream.Dispose();
         }
     }
 

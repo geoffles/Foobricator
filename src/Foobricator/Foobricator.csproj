@@ -85,7 +85,10 @@
     <Compile Include="Tools\DataReference.cs" />
     <Compile Include="Tools\DebugInfo.cs" />
     <Compile Include="Tools\IDebugInfoProvider.cs" />
+    <Compile Include="Tools\IValidation.cs" />
+    <Compile Include="Tools\IValidationProvider.cs" />
     <Compile Include="Tools\Log.cs" />
+    <Compile Include="Tools\RichValidationProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Schema.json" />

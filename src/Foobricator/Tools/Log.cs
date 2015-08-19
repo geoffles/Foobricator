@@ -2,9 +2,24 @@
 
 namespace Foobricator.Tools
 {
-    class Log
+    public interface ILog
     {
-        public static Log Instance = new Log();
+        bool DebugInfoOnWarn { get; set;  }
+
+        void Info(string message);
+        void Info(string message, params object[] formatArgs);
+        void Trace(string message);
+        void Trace(string message, params object[] formatArgs);
+        void Warn(string message);
+        void Warn(string message, params object[] formatArgs);
+        void Error(string message);
+        void Error(string message, params object[] formatArgs);
+
+    }
+
+    class Log : ILog
+    {
+        public static ILog Instance = new Log();
 
         private Log()
         {
@@ -12,6 +27,16 @@ namespace Foobricator.Tools
         }
 
         public bool DebugInfoOnWarn { get; set; }
+
+        public void Trace(string message)
+        {
+            Console.WriteLine(message);
+        }
+
+        public void Trace(string message, params object[] formatArgs)
+        {
+            Info(string.Format(message, formatArgs));
+        }
 
         public void Info(string message)
         {
@@ -50,6 +75,22 @@ namespace Foobricator.Tools
         public void Warn(string message, params object[] formatArgs)
         {
             Warn(string.Format(message, formatArgs));
+        }
+
+        public void Error(string message)
+        {
+            var color = Console.ForegroundColor;
+
+            Console.ForegroundColor = ConsoleColor.Red;
+
+            Console.WriteLine(message);
+
+            Console.ForegroundColor = color;
+        }
+
+        public void Error(string message, params object[] formatArgs)
+        {
+            Info(string.Format(message, formatArgs));
         }
     }
 }
