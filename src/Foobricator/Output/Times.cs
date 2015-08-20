@@ -11,20 +11,14 @@ namespace Foobricator.Output
         public readonly List<IOutput> Target;
         public readonly int Count;
         public readonly string Separator;
+        public readonly string Scope;
 
-        public Times(IEnumerable<IOutput> target, int count, string separator)
+        public Times(IEnumerable<IOutput> target, int count, string separator, string scope)
         {
             Target = target.ToList();
             Count = count;
             Separator = separator;
-        }
-
-
-        public Times(IOutput target, int count, string separator)
-        {
-            Target = new List<IOutput>{target};
-            Count = count;
-            Separator = separator;
+            Scope = scope ?? Iterator.DefaultScope;
         }
 
         public DebugInfo DebugInfo { get; set; }
@@ -38,7 +32,7 @@ namespace Foobricator.Output
                     writer.Write(Separator);
                 }
                 Target.ForEach(p => p.Evaluate(writer));
-                Iterator.NextAll();
+                Iterator.NextAll(Scope);
             }
         }
     }

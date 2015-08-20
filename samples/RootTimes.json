@@ -1,0 +1,62 @@
+{
+		context: [{
+			name:"names", type:"listSampler", source:{ type:"stringList", values:["John", "Bob", "Joe"] }
+		}, {
+			name:"surnames", type:"listSampler", source:{ type:"stringList", values:["Smith", "Bloggs", "Soap"] }
+		}, {
+			name:"randomBalance",  type:"randomDecimal", upper: 10000, lower:-10000 
+		}, {
+			name:"namesCapture", type:"iterator", scope: "persons", sources:[ { 
+					type:"reference", refersTo:"names"
+				}, { 
+					type:"reference", refersTo:"surnames"
+				}]
+		},{
+			name:"accountBalances", type:"iterator", scope: "persons:balances", sources:[ { 
+					type:"reference", refersTo:"namesCapture"
+			},{
+				type:"singleValue", source:{ 
+					type:"reference", refersTo:"randomBalance"
+				}
+			}]
+		}],
+		output:[{
+			type:"times",
+			count: 4,
+			scope:"persons",
+			targets: [{
+				type:"fileOutput",
+				filename: "rootTimesOut1.txt",
+				targets:[{
+					type:"literal",
+					value:"<Accounts>\n"
+				},{
+					type:"formatString",
+					format:"{0}|{1}",
+					source:{type:"reference", refersTo:"namesCapture"}
+				},{
+					type:"literal",
+					value:"</Accounts>"
+				}]
+			},{
+				type:"fileOutput",
+				filename: "rootTimesOut2.txt",
+				targets:[{
+					type:"literal",
+					value:"<Accounts>\n"
+				},{
+					type:"times",
+					count:5,
+					scope:"balances",
+					targets:[{
+						type:"formatString",
+						format:"{0}|{1}|{2}",
+						source:{type:"reference", refersTo:"accountBalances"}
+					}]
+				},{
+					type:"literal",
+					value:"</Accounts>"
+				}]
+			}]
+		}]
+	}

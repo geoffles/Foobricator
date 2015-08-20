@@ -7,22 +7,39 @@ namespace Foobricator.Sources
 {
     public class Iterator: ISource, IDisposable, IDebugInfoProvider
     {
-        private static readonly List<Iterator> _instances = new List<Iterator>();
-        public static IReadOnlyList<Iterator> Instances { get { return _instances.AsReadOnly(); } }
+        private static readonly Dictionary<string, List<Iterator>> _instances = new Dictionary<string, List<Iterator>>();
+        public static IReadOnlyList<Iterator> Instances { get { return _instances.SelectMany(p => p.Value).ToList().AsReadOnly(); } }
+        public readonly string Scope;
 
         public DebugInfo DebugInfo { get; set; }
+        public const string DefaultScope = "Global";
 
-        public static void NextAll()
+        public static void NextAll(string scope)
         {
-            _instances.ForEach(p => p.Next());
+            IList<string> inputScopes = scope.Split(':');
+
+            List<string> relavanScopes = _instances
+                .Keys
+                .Where(key => key.Split(':').Intersect(inputScopes).Any())
+                .Distinct()
+                .ToList();
+
+            relavanScopes.ForEach(x => _instances[x].ForEach(y => y.Next()));
+           
         }
 
         public readonly IList<object> Sources;
         private IList<object> Items;
 
-        public Iterator(IList<object> sources)
+        public Iterator(IList<object> sources, string scope)
         {
-            _instances.Add(this);
+            Scope = scope ?? DefaultScope;
+            if (!_instances.ContainsKey(Scope))
+            {
+                _instances[Scope] = new List<Iterator>();
+            }
+            _instances[Scope].Add(this);
+
             Sources = sources.Select(p => p is DataReference
                 ? ((DataReference) p).Dereference()
                 : p)
@@ -66,7 +83,7 @@ namespace Foobricator.Sources
 
         public void Dispose()
         {
-            _instances.Remove(this);
+            _instances[Scope].Remove(this);
         }
     }
 }

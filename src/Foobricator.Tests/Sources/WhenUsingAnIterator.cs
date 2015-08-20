@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Foobricator.Sources;
+using Foobricator.Tests.TestTools;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Foobricator.Tests.Sources
@@ -11,16 +12,6 @@ namespace Foobricator.Tests.Sources
     [TestClass]
     public class WhenUsingAnIterator
     {
-        private class TestSource : ISource
-        {
-            public int Count = 0;
-
-            public object GetItem()
-            {
-                return Count++;
-            }
-        }
-
         [TestMethod]
         public void ThenNextMustUpdateFromSources()
         {
@@ -30,7 +21,7 @@ namespace Foobricator.Tests.Sources
                 new TestSource{ Count = 100 }
             };
 
-            using (var iterator = new Iterator(sources.Cast<object>().ToList()))
+            using (var iterator = new Iterator(sources.Cast<object>().ToList(),null))
             {
                 //Incremented on next due to constructor
                 Assert.AreEqual(1, sources[0].Count);
@@ -39,7 +30,7 @@ namespace Foobricator.Tests.Sources
                 Assert.AreEqual(0, ((IList<object>)iterator.GetItem())[0] );
                 Assert.AreEqual(100, ((IList<object>)iterator.GetItem())[1]);
 
-                Iterator.NextAll();
+                Iterator.NextAll(Iterator.DefaultScope);
 
                 Assert.AreEqual(2, sources[0].Count);
                 Assert.AreEqual(102, sources[1].Count);
@@ -61,8 +52,8 @@ namespace Foobricator.Tests.Sources
                 new TestSource{ Count = 100 }
             };
 
-            using (var first = new Iterator(sources.Cast<object>().ToList()))
-            using (var second = new Iterator(new List<object>{first}))
+            using (var first = new Iterator(sources.Cast<object>().ToList(), null))
+            using (var second = new Iterator(new List<object>{first}, null))
             {
                 Assert.AreEqual(0, ((IList<object>)first.GetItem())[0]);
                 Assert.AreEqual(100, ((IList<object>)first.GetItem())[1]);
@@ -70,7 +61,7 @@ namespace Foobricator.Tests.Sources
                 Assert.AreEqual(0, ((IList<object>)second.GetItem())[0]);
                 Assert.AreEqual(100, ((IList<object>)second.GetItem())[1]);
 
-                Iterator.NextAll();
+                Iterator.NextAll(Iterator.DefaultScope);
 
                 Assert.AreEqual(1, ((IList<object>)first.GetItem())[0]);
                 Assert.AreEqual(101, ((IList<object>)first.GetItem())[1]);
@@ -90,7 +81,7 @@ namespace Foobricator.Tests.Sources
                 new StringList(new List<object>{"a", "b"})
             };
 
-            using (var iterator = new Iterator(sources))
+            using (var iterator = new Iterator(sources, null))
             {
                 var result = ((IList<object>) iterator.GetItem());
                 Assert.AreEqual(0, result[0]);
@@ -110,8 +101,8 @@ namespace Foobricator.Tests.Sources
                 new StringList(new List<object>{"a", "b"})
             };
 
-            using (var first = new Iterator(sources))
-            using (var second = new Iterator(new List<object> { first, sources[2] }))
+            using (var first = new Iterator(sources, null))
+            using (var second = new Iterator(new List<object> { first, sources[2] }, null))
             {
                 var result = ((IList<object>)second.GetItem());
 
@@ -134,7 +125,7 @@ namespace Foobricator.Tests.Sources
                 new TestSource{ Count = 100 }
             };
 
-            using (var iterator = new Iterator(sources.Cast<object>().ToList()))
+            using (var iterator = new Iterator(sources.Cast<object>().ToList(), null))
             {
                 //Incremented on next due to constructor
                 Assert.AreEqual(1, sources[0].Count);
@@ -154,7 +145,7 @@ namespace Foobricator.Tests.Sources
         {
             Assert.AreEqual(0, Iterator.Instances.Count, "The iterator context is not clean");
 
-            using (var iterator = new Iterator(new List<object> {new TestSource()}))
+            using (var iterator = new Iterator(new List<object> {new TestSource()}, null))
             {
                 Assert.AreEqual(1, Iterator.Instances.Count, "The iterator did not register");
             }
@@ -165,7 +156,7 @@ namespace Foobricator.Tests.Sources
         {
             Assert.AreEqual(0, Iterator.Instances.Count, "The iterator context is not clean");
 
-            using (var iterator = new Iterator(new List<object> {new TestSource()}))
+            using (var iterator = new Iterator(new List<object> {new TestSource()},null))
             {
                 Assert.AreEqual(1, Iterator.Instances.Count, "The iterator did not register");
             }

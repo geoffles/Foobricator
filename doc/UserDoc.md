@@ -51,6 +51,12 @@ The above defines a list of strings that can be referenced as a source element l
 
 The above will define a list sampler which selects random values from the sample list.
 
+
+#### Iterator Scopes
+Iterator scopes are a mechanism for partitioning the steps of data generation. An iterator is a captured set of generated values, and new values are "pulled" time a *times* element loops over the scopes that an iterator is subscribed to.
+
+Order of execution between scopes is not guaranteed and is controlled by the nesting of your times elements.
+
 ----------
 
 #  Sources {#Sources}
@@ -150,7 +156,9 @@ The Data Generator will select random values from sources like [ListSampler](#Li
 
 The Iterator will also interrogate these items, but will then store that value and return the same value each time. This is useful if you need to **reuse** a value.
 
-The Iterator will interrogate it's sources when inside a looping output such as [Times](#Times). All iterators are evaluated in order of declaration, so iterators can safely reference a previously declared iterator.
+The Iterator will interrogate it's sources on declaration and when inside a looping output such as [Times](#Times). All iterators are evaluated in order of declaration, so iterators can safely reference a previously declared iterator, however scope evaluation order is not guaranteed (see below).
+
+Iterators can be *scoped*. The iterators will only be iterated by a [Times](#Times) with a matching scope. The scope property is optional and defaults to `Global`. You can subscribe to multiple scopes by using a `:` between scope names. Similarly the times can evaluate multiple scopes in the same way. The order of scope execution is not guaranteed - to do this, you need to structure your nested *times* elements correctly.
 
 The iterator accepts an array of sources, which can either be references or directly declared sources.
 
@@ -167,6 +175,7 @@ If you iterator has sources which return lists, it will flatten the lists in ord
 **Optional Properties**
 
 * name: Must be a string
+* scope: Must be a string
 
 
 **Example**
@@ -174,6 +183,7 @@ If you iterator has sources which return lists, it will flatten the lists in ord
 	{
 		name:"sampleIterator", 
 		type:"iterator", 
+		scope: "foo",
 		sources:[
 			{type:"stringList", values: ["Foo", "Bar", "Baz"]},
 			{type:"reference", refersTo:"listFoo"}
@@ -405,7 +415,11 @@ The substring tool allows you to copy out a piece of a string from a specified l
 #Root Outputs {#RootOutputs}
 
 ----------
+## Times
 
+[Times](#Times) can be used as a root output as well. Separator is not supported when used as a root.
+
+This allows you to use a common data set across two ouptut files.  
 
 ##ClipboardOutput {#ClipboardOutput}
 
@@ -651,7 +665,11 @@ None
 
 ##  Times
 
-The times output is a repeater. The times output will also iterate all iterators on each repeat. Iterators are iterated in order of declaration. Each target will be evaluated once per iteration and in total the Count of times.
+The times output is a repeater. The times output will also iterate all iterators with a match *scope* on each repeat. Iterators are iterated in order of declaration. Each target will be evaluated once per iteration and in total the Count of times.
+
+You can control which iterators are iterated by using the the optional property *scope*. If no scope is defined, it defaults to `Global`. See [Iterator](#Iterator) for more information.
+
+You can supply a separator which will be emitted to the output between each output. This is useful for supplying the commas between records in JSON for example.
 
 **Required Properties**
 
@@ -662,6 +680,7 @@ The times output is a repeater. The times output will also iterate all iterators
 **Optional Parameters**
 
 * separator: Must be a string
+* scope: Must be a string
  
 **Example**
 
@@ -669,6 +688,7 @@ The times output is a repeater. The times output will also iterate all iterators
 		type: "times",
 		count: 100,
 		separator: ":",
+		scope: "foo",
 		targets: [{
 			type: "formatString",
 			format: "FirstItem:{0}",
@@ -677,3 +697,27 @@ The times output is a repeater. The times output will also iterate all iterators
 	}
 
 ----------
+
+
+## Literal
+
+A literal is simply a literal value in the output. What ever is in *value* will be output. 
+
+This is allows you to define header and trailer information, such as root noodes for XML for example. 
+
+
+**Required Properties**
+
+* type: Must be "literal"
+* value: Must be a string    
+
+**Optional Parameters**
+
+None
+ 
+**Example**
+
+	{
+		type: "literal",
+		value: "<AllCustomers>"
+	}

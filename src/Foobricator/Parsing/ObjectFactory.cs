@@ -309,8 +309,9 @@ namespace Foobricator.Parsing
         private Iterator CreateIterator(JToken item)
         {
             IEnumerable<object> sources = item["sources"].Select(Create);
+            string scope = (string)item["scope"];
 
-            Iterator result = new Iterator(sources.ToList());
+            Iterator result = new Iterator(sources.ToList(), scope); 
 
             result.DebugInfo = GetDebugInfo(item);
 
@@ -341,17 +342,34 @@ namespace Foobricator.Parsing
             return result;
         }
 
-        private Times CreateTimes(JToken item)
+        private object CreateTimes(JToken item)
         {
             int count = (int) item["count"];
             string separator = (string) item["separator"];
-            IEnumerable<IOutput> targets = item["targets"].Select(Create).Cast<IOutput>();
+            string scope = (string) item["scope"];
 
-            Times result = new Times(targets, count, separator);
 
-            result.DebugInfo = GetDebugInfo(item);
+            var targets = item["targets"].Select(Create);
+            if (targets.OfType<IRootOutput>().Any())
+            {
+                RootTimes result = new RootTimes(targets.Cast<IRootOutput>().ToList(), count, separator, scope);
 
-            return result;
+                result.DebugInfo = GetDebugInfo(item);
+
+                return result;
+            }
+            else
+            {
+                Times result = new Times(targets.Cast<IOutput>(), count, separator, scope);
+
+                result.DebugInfo = GetDebugInfo(item);
+
+                return result;
+            }
+
+            //IEnumerable<IOutput> targets = item["targets"].Select(Create).Cast<IOutput>();
+
+            
         }
 
         private DebugInfo GetDebugInfo(JToken item)

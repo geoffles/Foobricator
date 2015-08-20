@@ -57,12 +57,15 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sources\WhenUsingAnInteratorInAScope.cs" />
     <Compile Include="Sources\WhenUsingAnIterator.cs" />
     <Compile Include="Sources\WhenUsingAReference.cs" />
     <Compile Include="Sources\WhenUsingAStringList.cs" />
     <Compile Include="Sources\WhenUsingListSampler.cs" />
+    <Compile Include="Sources\WhenUsingTimes.cs" />
     <Compile Include="TestTools\InjectObjectFactoryContext.cs" />
     <Compile Include="TestTools\TestDataRandomizer.cs" />
+    <Compile Include="TestTools\TestSource.cs" />
     <Compile Include="WhenUsingStringFormat.cs" />
   </ItemGroup>
   <ItemGroup>
