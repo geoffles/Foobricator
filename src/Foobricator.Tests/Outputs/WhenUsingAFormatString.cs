@@ -45,6 +45,7 @@ namespace Foobricator.Tests.Outputs
                 var result = sw.ToString();
                 Assert.AreEqual("100", result);
             }
+            Iterator.Instances.ToList().ForEach(p => p.Dispose());
         }
 
         [TestMethod]
@@ -77,6 +78,7 @@ namespace Foobricator.Tests.Outputs
                 var result = sw.ToString();
                 Assert.AreEqual("100|200", result);
             }
+            Iterator.Instances.ToList().ForEach(p => p.Dispose());
         }
 
         [TestMethod]
@@ -120,50 +122,7 @@ namespace Foobricator.Tests.Outputs
                 var result = sw.ToString();
                 Assert.AreEqual("100|Foo", result);
             }
-        }
-
-        [TestMethod]
-        public void ThenRichFormatStringMustNotIterateOutOfScope()
-        {
-            var myNumber = new TestSource { Count = 100 };
-            const string json = @"{
-                                    type:'formatString',
-                                    suppressEndLine:true,
-                                    scope:'Bar',
-                                    format:[{
-                                        value:{
-                                            type:'singleValue', 
-                                            source:{type:'reference', refersTo:'myNumber'}
-                                        }
-                                    }, 
-                                    '|',
-                                    {
-                                        value:{
-                                            type:'singleValue', 
-                                            source:{type:'reference', refersTo:'myString'}
-                                        }
-                                    }]
-                                }";
-            using (new InjectObjectFactoryContext(new Dictionary<string, object>
-            {
-                {"myNumber", myNumber},
-                {"myString", "Foo"}
-            }))
-            {
-
-                var item = JToken.Parse(json);
-                var formatString = (FormatString)new ObjectFactory().Create(item);
-
-                var times = new Times(new List<IOutput> { formatString }, 2, null, "NotBar");
-
-                var sw = new StringWriter();
-                times.Evaluate(sw);
-
-                var result = sw.ToString();
-                Assert.AreEqual("100|Foo100|Foo", result);
-
-                Assert.AreEqual(100, myNumber.Count);
-            }
+            Iterator.Instances.ToList().ForEach(p => p.Dispose());
         }
 
         [TestMethod]
@@ -209,6 +168,7 @@ namespace Foobricator.Tests.Outputs
                 var result = sw.ToString();
                 Assert.AreEqual("100.00    |Foo", result);
             }
+            Iterator.Instances.ToList().ForEach(p => p.Dispose());
         }
     }
 }

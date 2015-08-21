@@ -53,9 +53,9 @@ The above will define a list sampler which selects random values from the sample
 
 
 #### Iterator Scopes
-Iterator scopes are a mechanism for partitioning the steps of data generation. An iterator is a captured set of generated values, and new values are "pulled" time a *times* element loops over the scopes that an iterator is subscribed to.
+Iterator scopes are a mechanism for partitioning the steps of data generation. An iterator is a captured set of generated values, and new values are "pulled" by a *times* element when it loops over the scopes that an iterator is subscribed to.
 
-Order of execution between scopes is not guaranteed and is controlled by the nesting of your times elements.
+Order of execution between scopes is not guaranteed and is controlled by the nesting of your *times* elements.
 
 ----------
 
@@ -430,6 +430,10 @@ The clipboard output will place your generated data directly onto your clipboard
 * type: Must be "clipboardOutput"
 * targets: Must be an array of type "output" with at least one or more entries
 
+**Optional Properties**
+
+None.
+
 **Example**
 
     {
@@ -464,42 +468,57 @@ The clipboard output will place your generated data directly onto your clipboard
 
 File output is used to directly output your generation data to a file.
 
+You can ask it not to overwrite the file by specifying `append:true`. This is useful for applying headers and footers. You can do this by declaring two *fileOutput*s that write to the same file, with the second output specifying `append:true` (see example).
+
 **Required Properties**
 
 * type: Must be "fileOutput"
 * filename: Must be a string
 * targets: must be an array of type "output" with at least one or more entries
 
+**Optional Properties**
+
+* append: Must be true or false 
+
 **Example**
 
-    {
-        type: "fileOutput",
-        fileName: "myGeneratedDataFile.txt",
-        targets: [{
-            type: "times",
-            count: 100,
-            targets: [
-                {
-                    type: "formatString", 
-                    format:"{0}|{1:yyyy-MM-dd}|{2,-5:000}|{3,10:00000.00#}|{4}|{5}|{6}|{7}|", 
-                    source:{type: "reference", refersTo: "outputIt"}
-                }, {
-                    type:"conditionalOutput", 
-                    target:[{
-                        type:"formatString",
-                        format:"{0}",
-                        source:{type: "reference", refersTo: "outputIt"}
-                    }], 
-                    when: {
-                        source:{type:"reference", refersTo:"myListIterator"}, 
-                        op:"NotEq", 
-                        rightHandSide:"b"
-                    }
-                }
-            ]
-        }]
-    }
-
+    output:[{
+			type: "fileOutput",
+	        fileName: "myGeneratedDataFile.txt",
+			append: true,
+	        targets: [{
+				type:"literal",
+				value:"HEADER\N"
+			}]
+		},{
+	        type: "fileOutput",
+	        fileName: "myGeneratedDataFile.txt",
+			append: true,
+	        targets: [{
+	            type: "times",
+	            count: 100,
+	            targets: [
+	                {
+	                    type: "formatString", 
+	                    format:"{0}|{1:yyyy-MM-dd}|{2,-5:000}|{3,10:00000.00#}|{4}|{5}|{6}|{7}|", 
+	                    source:{type: "reference", refersTo: "outputIt"}
+	                }, {
+	                    type:"conditionalOutput", 
+	                    target:[{
+	                        type:"formatString",
+	                        format:"{0}",
+	                        source:{type: "reference", refersTo: "outputIt"}
+	                    }], 
+	                    when: {
+	                        source:{type:"reference", refersTo:"myListIterator"}, 
+	                        op:"NotEq", 
+	                        rightHandSide:"b"
+	                    }
+	                }
+	            ]
+	        }]
+	    }
+	]
 
 ----------
 
@@ -538,9 +557,15 @@ None
 
 Format string allows you to output source items into an arbitrary string with formatted substitions including number padding, date formatting, and fixed width columns.
 
-By default, format string will emit a new line at the end. To suppress this, specify *suppressEndLine* as `false`.
+By default, format string will emit a new line at the end. To suppress this, specify `suppressEndLine:false`.
 
-Format string can use only a [Reference](#Reference) object for it's source.
+Format string canbe used in two ways: Rich and Plain formatting.
+
+### Plain Formatting
+
+Plain formatting must specify a `source` object and can use only a [Reference](#Reference) object for it's source and the format can be specfied either as a string or an array of strings.
+
+When you use an array of strings, they will all be joined together as if they were all one string.
 
 The format string uses exactly the same rules as the [.Net formatstring](http://blogs.msdn.com/b/kathykam/archive/2006/03/29/564426.aspx). The basics are as follows:
 
@@ -570,13 +595,19 @@ Which produces:
 	John        |Smith        |000500.00
 
 
-**Required Properties**
+**Required Properties (Plain formats)**
 
 * type: Must be "formatString"
-* format: Must be a string 
-* source:
-    * type: Must be "reference"
-    * refersTo: Must be the *name* of the source item
+* format: Must be a string or array of strings.
+* source: Must be a reference.
+
+**Required Properties (Rich formats)**
+
+* type: Must be "formatString"
+* format: Rich Formatted array, items should be
+	* string
+	* value object (see example).
+
 
 **Optional Parameters**
 
@@ -584,11 +615,42 @@ Which produces:
  
 **Example**
 
+Plain:
+
 	{
 		type: "formatString",
 		format:"{0,12}|{1,12}|{2:000000.00}", 
-		source:{type:"reference", 
-		refersTo:"sampleIterator"} 
+		source: { type:"reference", refersTo:"sampleIterator" } 
+	}
+
+	{
+		type:"formatString",
+		format: [ 
+			"{0,12}|", 
+			"{1,12}|",
+			"{2:000000.00}"
+		],
+		source: { type:"reference", refersTo:"sampleIterator" }
+	}
+
+Rich:
+
+	{
+		type:"formatString",
+		format: [ 
+			"<FooFoo>", 
+			{
+				value:{
+					type:"singleValue",
+					source:{
+						type:"reference",
+						refersTo:"sampleIterator"
+					}
+				},
+				format:",10:##00.00"
+			},
+			"</FooFoo>"
+		]		
 	}
 
 ----------
