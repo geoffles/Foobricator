@@ -106,7 +106,8 @@
 							"$ref" : "#/definitions/allOutputs",
 							"minItems" : 1
 						}
-					}
+					},
+                    "append" : { type: "boolean" }
 				},
 				"additionalProperties":false
 			},
@@ -170,8 +171,14 @@
 						"type" : "string",
 						"pattern" : "^formatString"
 					},
-					"format" : {
-						"type" : "string"
+					"format" : { "oneOf" : [{
+                            "type" : "string"
+                        },{
+                            "type" : "array",
+                            "items" : {
+                                "type":"string"
+                                }
+                        }]
 					},
 					"source" : {
 						"$ref" : "#/definitions/sources/reference"

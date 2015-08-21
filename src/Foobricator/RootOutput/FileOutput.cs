@@ -8,24 +8,30 @@ namespace Foobricator.RootOutput
 {
     public class FileOutput : IRootOutput, IDebugInfoProvider
     {
-        private bool mustAppend = false;
+        public readonly bool Append;
+        private bool _mustAppend = false;
         public readonly string Filename;
         public readonly IList<IOutput> Targets;
 
-        public FileOutput(string filename, IList<IOutput> targets)
+        public FileOutput(string filename, IList<IOutput> targets, bool append)
         {
             Filename = filename;
             Targets = targets;
+            Append = append;
+            if (Append)
+            {
+                _mustAppend = true;
+            }
         }
 
         public void Evaluate()
         {
-            using (var fileOut = new StreamWriter(Filename, mustAppend))
+            using (var fileOut = new StreamWriter(Filename, _mustAppend))
             {
                 Targets.ToList().ForEach(p => p.Evaluate(fileOut));
             }
 
-            mustAppend = true;
+            _mustAppend = true;
         }
 
         public DebugInfo DebugInfo { get; set; }

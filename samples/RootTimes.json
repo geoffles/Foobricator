@@ -4,7 +4,7 @@
 		}, {
 			name:"surnames", type:"listSampler", source:{ type:"stringList", values:["Smith", "Bloggs", "Soap"] }
 		}, {
-			name:"randomBalance",  type:"randomDecimal", upper: 10000, lower:-10000 
+			name:"itRand", type:"iterator", scope:"balances", sources:[{ name:"randomBalance",  type:"randomDecimal", upper: 10000, lower:-10000 }]
 		}, {
 			name:"namesCapture", type:"iterator", scope: "persons", sources:[ { 
 					type:"reference", refersTo:"names"
@@ -16,13 +16,13 @@
 					type:"reference", refersTo:"namesCapture"
 			},{
 				type:"singleValue", source:{ 
-					type:"reference", refersTo:"randomBalance"
+					type:"reference", refersTo:"itRand"
 				}
 			}]
 		}],
 		output:[{
 			type:"times",
-			count: 4,
+			count: 500,
 			scope:"persons",
 			targets: [{
 				type:"fileOutput",
@@ -32,7 +32,7 @@
 					value:"<Accounts>\n"
 				},{
 					type:"formatString",
-					format:"{0}|{1}",
+					format:["{0}|{1}"],
 					source:{type:"reference", refersTo:"namesCapture"}
 				},{
 					type:"literal",
@@ -50,7 +50,7 @@
 					scope:"balances",
 					targets:[{
 						type:"formatString",
-						format:"{0}|{1}|{2}",
+						format:"{0}|{1}|{2,15:00000000.00}|",
 						source:{type:"reference", refersTo:"accountBalances"}
 					}]
 				},{

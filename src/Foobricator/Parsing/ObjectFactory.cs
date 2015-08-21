@@ -17,7 +17,7 @@ namespace Foobricator.Parsing
             string type = (string)item["type"];
             switch (type)
             {
-                case "stringList": return CreateList(item);
+                case "stringList": return CreateStringList(item);
                 case "iterator": return CreateIterator(item);
                 case "reference": return CreateDataReference(item);
                 case "singleValue": return CreateSingleValue(item);
@@ -54,9 +54,10 @@ namespace Foobricator.Parsing
         private FileOutput CreateFileOutput(JToken item)
         {
             string filename = (string) item["filename"];
+            bool? append = (bool?) item["append"];
             var targets = item["targets"].Children().Select(Create).Cast<IOutput>().ToList();
 
-            var result = new FileOutput(filename, targets);
+            var result = new FileOutput(filename, targets, append ?? false);
             
             result.DebugInfo = GetDebugInfo(item);
 
@@ -318,7 +319,7 @@ namespace Foobricator.Parsing
             return result;
         }
 
-        private StringList CreateList(JToken item)
+        private StringList CreateStringList(JToken item)
         {
             IEnumerable<string> values = item["values"].Select(p => (string) p);
 
@@ -330,7 +331,11 @@ namespace Foobricator.Parsing
 
         private FormatString CreateFormatString(JToken item)
         {
-            string formatString = (string)item["format"];
+            var formatItem = item["format"];
+            string formatString = formatItem.Type == JTokenType.Array
+                ? formatItem.Select(p => (string)p).Aggregate(string.Concat)
+                : (string)formatItem;
+             
             bool? suppressEndLine = (bool?) item["suppressEndLine"];
 
             DataReference source = CreateDataReference(item["source"]);
