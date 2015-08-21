@@ -5,10 +5,10 @@ using Foobricator.Tools;
 
 namespace Foobricator.Sources
 {
-    public class Iterator: ISource, IDisposable, IDebugInfoProvider
+    public class Iterator: ISource, IDebugInfoProvider, IIterable
     {
-        private static readonly Dictionary<string, List<Iterator>> _instances = new Dictionary<string, List<Iterator>>();
-        public static IReadOnlyList<Iterator> Instances { get { return _instances.SelectMany(p => p.Value).ToList().AsReadOnly(); } }
+        private static readonly Dictionary<string, List<IIterable>> _instances = new Dictionary<string, List<IIterable>>();
+        public static IReadOnlyList<IIterable> Instances { get { return _instances.SelectMany(p => p.Value).ToList().AsReadOnly(); } }
         public readonly string Scope;
 
         public DebugInfo DebugInfo { get; set; }
@@ -36,7 +36,7 @@ namespace Foobricator.Sources
             Scope = scope ?? DefaultScope;
             if (!_instances.ContainsKey(Scope))
             {
-                _instances[Scope] = new List<Iterator>();
+                _instances[Scope] = new List<IIterable>();
             }
             _instances[Scope].Add(this);
 
@@ -47,7 +47,7 @@ namespace Foobricator.Sources
             Next();
         }
 
-        private void Next()
+        public void Next()
         {
             Items = Sources
                 .Select(GetItems)

@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Foobricator.Tests
 {
     [TestClass]
-    public class WhenUsingStringFormat
+    public class WhenNativelyFormattingAString
     {
         private class Formatted : IFormattable
         {
@@ -34,5 +34,7 @@ namespace Foobricator.Tests
             var s = string.Format("{0}|{0,-10:A}|{0:B}", new Formatted());
 
         }
+
+        
     }
 }

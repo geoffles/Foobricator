@@ -1,0 +1,27 @@
+{
+		context: [{
+			name:"names", type:"listSampler", source:{ type:"stringList", values:["John", "Bob", "Joe"] }
+		}, {
+			name:"surnames", type:"listSampler", source:{ type:"stringList", values:["Smith", "Bloggs", "Soap"] }
+		}],
+		output:[{
+            type:"fileOutput",
+            filename: "RichFormatStringOut.txt",
+            targets:[{
+                type:"formatString",
+                format:[{
+                    value:{
+                        type:"singleValue", 
+                        source:{type:"reference", refersTo:"names"}
+                    }
+                }, 
+                "|",
+                {
+                    value:{
+                        type:"singleValue", 
+                        source:{type:"reference", refersTo:"surnames"}
+                    }
+                }]
+            }]
+		}]
+	}

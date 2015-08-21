@@ -3,9 +3,8 @@ using Foobricator.Tools;
 
 namespace Foobricator.Sources
 {
-    class RandomInt : ISource, IFormattable, IDebugInfoProvider
+    public class RandomInt : ISource, IFormattable, IDebugInfoProvider
     {
-
         public RandomInt(int lower, int upper)
         {
             _upper = upper;

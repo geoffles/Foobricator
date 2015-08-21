@@ -331,16 +331,46 @@ namespace Foobricator.Parsing
 
         private FormatString CreateFormatString(JToken item)
         {
-            var formatItem = item["format"];
-            string formatString = formatItem.Type == JTokenType.Array
-                ? formatItem.Select(p => (string)p).Aggregate(string.Concat)
-                : (string)formatItem;
-             
-            bool? suppressEndLine = (bool?) item["suppressEndLine"];
+            JToken sourceItem = item["source"];
+            JToken formatItem = item["format"];
+            bool? suppressEndLine = (bool?)item["suppressEndLine"];
+            string scope = (string)item["scope"];
 
-            DataReference source = CreateDataReference(item["source"]);
+            object source;
+            string formatString;
+            if (sourceItem == null)
+            {
+                List<object> sources = new List<object>();
+                List<string> formatStringComponents = new List<string>();
+                foreach (JToken subItem in formatItem)
+                {
+                    if (subItem.Type == JTokenType.String)
+                    {
+                        formatStringComponents.Add((string)subItem);
+                    }
+                    else
+                    {
+                        string componentFormat = (string) subItem["format"] ?? string.Empty;
+                        formatStringComponents.Add(string.Concat("{", sources.Count, componentFormat, "}"));
+                        sources.Add(Create(subItem["value"]));
+                    }
+                }
+                source = new Iterator(sources, scope);
+                formatString = formatStringComponents.Aggregate(string.Concat);
+            }
+            else
+            {
+                source = CreateDataReference(sourceItem);
+                formatString = formatItem.Type == JTokenType.Array
+                    ? formatItem.Select(p => (string)p).Aggregate(string.Concat)
+                    : (string)formatItem;
+            }
 
-            var result = new FormatString(source, formatString, suppressEndLine ?? false);
+
+
+            var result = source is DataReference
+                ? new FormatString((DataReference) source, formatString, suppressEndLine ?? false)
+                : new FormatString((ISource) source, formatString, suppressEndLine ?? false);
 
             result.DebugInfo = GetDebugInfo(item);
 

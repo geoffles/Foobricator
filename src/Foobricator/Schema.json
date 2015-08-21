@@ -164,31 +164,76 @@
 				"additionalProperties" : false
 			},
 			"formatString" : {
-				"type" : "object",
-				"required" : ["type", "format", "source"],
-				"properties" : {
-					"type" : {
-						"type" : "string",
-						"pattern" : "^formatString"
-					},
-					"format" : { "oneOf" : [{
-                            "type" : "string"
-                        },{
-                            "type" : "array",
-                            "items" : {
-                                "type":"string"
+                "oneOf" : [{
+                    "type" : "object",
+                    "required" : ["type", "format", "source"],
+                    "properties" : {
+                        "type" : {
+                            "type" : "string",
+                            "pattern" : "^formatString"
+                        },
+                        "format" : { "oneOf" : [{
+                                "type" : "string"
+                            },{
+                                "type" : "array",
+                                "items" : {
+                                    "type":"string"
+                                    }
+                            }]
+                        },
+                        "source" : {
+                            "$ref" : "#/definitions/sources/reference"
+                        },
+                        "suppressEndLine":{
+                            "type" : "boolean"
+                        }
+                    },
+                    "additionalProperties" : false
+                },{
+                    "type" : "object",
+                    "required" : ["type", "format"],
+                    "properties" : {
+                        "type" : {
+                            "type" : "string",
+                            "pattern" : "^formatString"
+                        },
+                        "format" : { "oneOf" : [{
+                                "type" : "string"
+                            },{
+                                "type" : "array",
+                                "items" : {
+                                    "oneOf":[{
+                                        "type":"object",
+                                        "required":["value"],
+                                        "properties":{                                            
+                                            "format": {
+                                                "type":"string"
+                                            },
+                                            "value":{
+                                                "oneOf": [{
+                                                    "$ref" : "#/definitions/sources/singleValue"
+                                                },{
+                                                    "$ref" : "#/definitions/sources/tupleValue"
+                                                }]
+                                            }
+                                        },
+                                        "additionalProperties":false
+                                    },{
+                                        "type":"string"
+                                    }]                                    
                                 }
-                        }]
-					},
-					"source" : {
-						"$ref" : "#/definitions/sources/reference"
-					},
-					"suppressEndLine":{
-						"type" : "boolean"
-					}
-				},
-				"additionalProperties" : false
-			},
+                            }]
+                        },
+                        "suppressEndLine":{
+                            "type" : "boolean"
+                        },
+                        "scope":{
+                            "type":"string"
+                        }
+                    },
+                    "additionalProperties" : false
+                }]
+            },
 			"times" : {
 				"type" : "object",
 				"required" : ["type", "targets", "count"],

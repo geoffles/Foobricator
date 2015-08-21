@@ -65,6 +65,9 @@
   <ItemGroup>
     <Compile Include="Output\Literal.cs" />
     <Compile Include="RootOutput\RootTimes.cs" />
+    <Compile Include="Sources\IIterable.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Sources\RandomInt.cs" />
     <Compile Include="Sources\ISource.cs" />
     <Compile Include="DataSets\CrossJoin.cs" />

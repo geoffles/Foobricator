@@ -21,7 +21,7 @@ namespace Foobricator.Output
         /// <summary>
         /// Reference to the source dataset
         /// </summary>
-        public readonly DataReference Reference;
+        public readonly object Source;
 
         public readonly bool SuppressEndLine;
         
@@ -33,7 +33,14 @@ namespace Foobricator.Output
         /// <example>{type:"formatString", format:"First{0}|Second{1}", source:{type:"reference", refersTo:"mySource"} }</example>
         public FormatString(DataReference reference, string formatString, bool suppressEndLine)
         {
-            Reference = reference;
+            Source = reference;
+            Format = formatString;
+            SuppressEndLine = suppressEndLine;
+        }
+
+        public FormatString(ISource source, string formatString, bool suppressEndLine)
+        {
+            Source = source;
             Format = formatString;
             SuppressEndLine = suppressEndLine;
         }
@@ -45,7 +52,12 @@ namespace Foobricator.Output
         /// </summary>
         public void Evaluate(TextWriter writer)
         {
-            object row = Reference.Dereference();
+            object row = Source;
+
+            if (row is DataReference)
+            {
+                row = ((DataReference)row).Dereference();
+            }
 
             if (row is ISource)
             {

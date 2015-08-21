@@ -56,6 +56,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Outputs\WhenUsingAFormatString.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sources\WhenUsingAnInteratorInAScope.cs" />
     <Compile Include="Sources\WhenUsingAnIterator.cs" />
@@ -66,7 +67,7 @@
     <Compile Include="TestTools\InjectObjectFactoryContext.cs" />
     <Compile Include="TestTools\TestDataRandomizer.cs" />
     <Compile Include="TestTools\TestSource.cs" />
-    <Compile Include="WhenUsingStringFormat.cs" />
+    <Compile Include="WhenNativelyFormattingAString.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Foobricator\Foobricator.csproj">
