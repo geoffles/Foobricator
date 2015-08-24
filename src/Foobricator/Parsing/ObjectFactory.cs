@@ -17,28 +17,52 @@ namespace Foobricator.Parsing
             string type = (string)item["type"];
             switch (type)
             {
-                case "stringList": return CreateStringList(item);
+                case "formatString": return CreateFormatString(item);
                 case "iterator": return CreateIterator(item);
+                case "listSampler": return CreateListSampler(item);
+                case "listSequence": return CreateListSequence(item);
+                case "numberList": return CreateNumberList(item);
+                case "randomDate": return CreateRandomDate(item);
+                case "randomDecimal": return CreateRandomDecimal(item);
+                case "randomInt": return CreateRandomInt(item);
                 case "reference": return CreateDataReference(item);
                 case "singleValue": return CreateSingleValue(item);
-                case "formatString": return CreateFormatString(item);
+                case "stringList": return CreateStringList(item);
+                case "subString": return CreateSubstring(item);
+                case "switch": return CreateSwitch(item);
                 case "tupleValue": return CreateTupleValue(item);
                 case "times": return CreateTimes(item);
-                case "listSampler": return CreateListSampler(item);
-                case "randomDate": return CreateRandomDate(item);
-                case "randomInt": return CreateRandomInt(item);
-                case "randomDecimal": return CreateRandomDecimal(item);
                 case "padLeft": return CreatePadLeft(item);
-                case "switch": return CreateSwitch(item);
                 case "when": return CreateWhen(item);
+                
                 case "conditionalOutput": return CreateConditionalOutput(item);
-                case "subString": return CreateSubstring(item);
                 case "fileOutput": return CreateFileOutput(item);
                 case "clipboardOutput": return CreateClipboardOutput(item);
                 case "literal": return CreateLiteral(item);
             }
             Log.Instance.Warn(string.Format("Missing implementation for type:'{0}'", type));
             return null;
+        }
+
+        private ListSequence CreateListSequence(JToken item)
+        {
+            object source = Create(item["source"]);
+
+            ListSequence result = source is DataReference ? new ListSequence((DataReference)source) : new ListSequence((IList<object>)source);
+
+            result.DebugInfo = GetDebugInfo(item);
+
+            return result;
+        }
+
+        private NumberList CreateNumberList(JToken item)
+        {
+            IEnumerable<decimal> values = item["values"].Select(p => (decimal)p);
+
+            var result = new NumberList(values.Cast<object>().ToList());
+            result.DebugInfo = GetDebugInfo(item);
+
+            return result;
         }
 
         private Literal CreateLiteral(JToken item)

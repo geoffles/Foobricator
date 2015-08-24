@@ -90,7 +90,7 @@ namespace Foobricator.Tools
 
         public void Error(string message, params object[] formatArgs)
         {
-            Info(string.Format(message, formatArgs));
+            Error(string.Format(message, formatArgs));
         }
     }
 }

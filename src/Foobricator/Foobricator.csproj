@@ -65,6 +65,8 @@
   <ItemGroup>
     <Compile Include="Output\Literal.cs" />
     <Compile Include="RootOutput\RootTimes.cs" />
+    <Compile Include="Sources\ListSequence.cs" />
+    <Compile Include="Sources\NumberList.cs" />
     <Compile Include="Sources\IIterable.cs">
       <SubType>Code</SubType>
     </Compile>

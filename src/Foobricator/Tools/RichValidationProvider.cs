@@ -37,8 +37,9 @@ namespace Foobricator.Tools
                 string tabString = tabs != 0
                     ? String.Concat(Enumerable.Repeat("\t", tabs))
                     : "";
+                
 
-                log.Error(tabString + error.Message);
+                log.Error("{0}({1},{2}):{3}", tabString, error.LineNumber, error.LinePosition, error.Message);
                 error.ChildErrors.ToList().ForEach(p => PrintValidationMessage(p, log, tabs + 1));
             }
         }
