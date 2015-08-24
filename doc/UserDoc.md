@@ -70,7 +70,7 @@ This is the list of sources available
 
 ----------
 
-The string list is a base level data tool. It allows you to define a list of strings which can then be sampled from to generate your rows.
+The string list is a base level data tool. It allows you to define a list of strings which can then be sampled or sequenced to generate your rows.
 
 **Required Properties**
 
@@ -89,6 +89,31 @@ The string list is a base level data tool. It allows you to define a list of str
 		type:"stringList", 
 		values:["Foo", "Bar", "Baz"]
 	}
+
+----------
+
+## NumberList {#NumberList}
+
+The number list is a base level data tool. It allows you to define a list of numbers which can then be sampled or sequenced to generate your rows. 
+
+**Required Properties**
+
+*  type: Must be "stringList"
+*  values: Must be an array of strings.
+
+**Optional Properties**
+
+*  name: Must be a string.
+
+
+**Example**
+
+	{
+		name:"listFoo", 
+		type:"numberList", 
+		values:[1, 1.2, 1.4]
+	}
+
 
 ----------
 
@@ -123,7 +148,7 @@ The list sampler allows you to select a random item from a list (eg: StringList.
 **Required Properties**
 
 * type: Must be "listSampler"
-* source: Must be a valid list object or refer to one.
+* source: Must be a valid list(string or number) object or refer to one.
 
 **Optional Properties**
 
@@ -134,8 +159,10 @@ The list sampler allows you to select a random item from a list (eg: StringList.
 	{
 		name:"sampleFoo",
 		type:"listSampler",
-		source:{type:"stringList",
-		values: ["Foo", "Bar", "Baz"]
+		source:{
+			type:"stringList",
+			values: ["Foo", "Bar", "Baz"]
+		}
 	}
 
 Or
@@ -144,6 +171,40 @@ Or
 		name:"sampleFoo",
 		type:"listSampler",
 		source:{type:"reference", refersTo:"listFoo"}
+	}
+
+----------
+
+##  ListSequence {#ListSequence}
+
+The list sequence allows you to select items from a list sequence (eg: StringList/NumberList. The list can either be referenced, or declared directly in the source property.
+
+**Required Properties**
+
+* type: Must be "listSequence"
+* source: Must be a valid list(string or number) object or refer to one.
+
+**Optional Properties**
+
+* name: Must be a string
+
+**Example**
+
+	{
+		name:"sequenceFoo",
+		type:"listSequence",
+		source:{
+			type:"stringList",
+			values: [1, 2, 3]
+		}
+	}
+
+Or
+
+	{
+		name:"sampleFoo",
+		type:"listSequence",
+		source:{type:"reference", refersTo:"sequenceFoo"}
 	}
 
 ----------
