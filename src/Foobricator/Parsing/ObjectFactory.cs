@@ -10,8 +10,14 @@ using Newtonsoft.Json.Linq;
 
 namespace Foobricator.Parsing
 {
+    /// <summary>
+    /// Factory for input parsing
+    /// </summary>
     public class ObjectFactory
     {
+        /// <summary>
+        /// Create the corresponding element from the JSON node
+        /// </summary>
         public object Create(JToken item)
         {
             string type = (string)item["type"];

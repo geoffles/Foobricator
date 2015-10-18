@@ -5,15 +5,42 @@ using Foobricator.Tools;
 
 namespace Foobricator.Sources
 {
+    /// <summary>
+    /// Value capture iterator
+    /// </summary>
+    /// <remarks>
+    /// This allows you to capture random values and 
+    /// reuse them, until you wish to reevaluate the sources.
+    /// </remarks>
     public class Iterator: ISource, IDebugInfoProvider, IIterable
     {
+        
         private static readonly Dictionary<string, List<IIterable>> _instances = new Dictionary<string, List<IIterable>>();
+
+        /// <summary>
+        /// List of iterables for iteration
+        /// </summary>
         public static IReadOnlyList<IIterable> Instances { get { return _instances.SelectMany(p => p.Value).ToList().AsReadOnly(); } }
+
+        /// <summary>
+        /// Iteration scope
+        /// </summary>
         public readonly string Scope;
 
+        /// <summary>
+        /// Debug information from parsing. From <see cref="Foobricator.Tools.IDebugInfoProvider"/>
+        /// </summary>
         public DebugInfo DebugInfo { get; set; }
+        
+        /// <summary>
+        /// The scope to use when none is provided
+        /// </summary>
         public const string DefaultScope = "Global";
 
+        /// <summary>
+        /// Reevaluate all iterables in a matching scope
+        /// </summary>
+        /// <param name="scope"></param>
         public static void NextAll(string scope)
         {
             IList<string> inputScopes = scope.Split(':');
@@ -28,9 +55,19 @@ namespace Foobricator.Sources
            
         }
 
+        /// <summary>
+        /// The sources for this iterator
+        /// </summary>
         public readonly IList<object> Sources;
+
+        /// <summary>
+        /// Captured values
+        /// </summary>
         private IList<object> Items;
 
+        /// <summary>
+        /// Initialise
+        /// </summary>
         public Iterator(IList<object> sources, string scope)
         {
             Scope = scope ?? DefaultScope;
@@ -47,6 +84,9 @@ namespace Foobricator.Sources
             Next();
         }
 
+        /// <summary>
+        /// Capture the next value
+        /// </summary>
         public void Next()
         {
             Items = Sources
@@ -76,11 +116,17 @@ namespace Foobricator.Sources
             return result;
         }
 
+        /// <summary>
+        /// Returns all items in the iterator. From <see cref="Foobricator.Sources.ISource"/>
+        /// </summary>
         public object GetItem()
         {
             return Items;
         }
 
+        /// <summary>
+        /// Remove this iterator from the list of iterables
+        /// </summary>
         public void Dispose()
         {
             _instances[Scope].Remove(this);

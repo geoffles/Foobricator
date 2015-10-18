@@ -11,19 +11,36 @@ using Newtonsoft.Json.Schema;
 
 namespace Foobricator.Tools
 {
+    /// <summary>
+    /// Validate against the schema with detailed schema validation errors.
+    /// </summary>
     public class RichValidationProvider: IValidationProvider
     {
         private class RichValidation : IValidation
         {
+            /// <summary>
+            /// Initialise
+            /// </summary>
             public RichValidation(bool isValid, IList<ValidationError> messages)
             {
                 IsValid = isValid;
                 Messages = messages;
             }
 
+            /// <summary>
+            /// The messages
+            /// </summary>
             public IList<ValidationError> Messages { get; private set; }
 
+            /// <summary>
+            /// Validation result
+            /// </summary>
             public bool IsValid { get; private set; }
+
+            /// <summary>
+            /// Prints all messages
+            /// </summary>
+            /// <param name="log"></param>
             public void PrintValidationMessages(ILog log)
             {
                 foreach (var message in Messages)
@@ -44,6 +61,9 @@ namespace Foobricator.Tools
             }
         }
 
+        /// <summary>
+        /// Perform validation for token
+        /// </summary>
         public IValidation Validate(JToken item)
         {
             var assembly = Assembly.GetExecutingAssembly();

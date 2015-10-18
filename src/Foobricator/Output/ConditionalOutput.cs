@@ -31,6 +31,9 @@ namespace Foobricator.Output
             Target = target.ToList();
         }
 
+        /// <summary>
+        /// Debug information from parsing. From <see cref="Foobricator.Tools.IDebugInfoProvider"/>
+        /// </summary>
         public DebugInfo DebugInfo { get; set; }
 
         /// <summary>

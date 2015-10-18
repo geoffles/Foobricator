@@ -6,30 +6,70 @@ using Foobricator.Tools;
 
 namespace Foobricator.Output
 {
+    /// <summary>
+    /// Encapusulates a condition
+    /// </summary>
     public class When : IDebugInfoProvider
     {
+        /// <summary>
+        /// Logical condition operators
+        /// </summary>
+        /// <remarks>
+        /// Gt,Eq and Lt are combined as an OR, while NOT is combined as an AND.
+        /// i.e. NOT (EQ or GT or LT)
+        /// </remarks>
         [Flags]
         public enum Op
         {
+            /// <summary>
+            /// Test equal
+            /// </summary>
             Eq = 1<<1,
+            /// <summary>
+            /// Test greater than
+            /// </summary>
             Gt = 1<<2,
+            /// <summary>
+            /// Test less than
+            /// </summary>
             Lt = 1<<3,
+            /// <summary>
+            /// Logically not all other ops
+            /// </summary>
             Not = 1<<4
         }
 
+        /// <summary>
+        /// The target object to evaluate against
+        /// </summary>
         public readonly ISource Source;
 
+        /// <summary>
+        /// The value to compare <c>Source</c> to
+        /// </summary>
         public readonly object RightHandSide;
 
+        /// <summary>
+        /// Logical operator. Can be combination.
+        /// </summary>
         public readonly Op Operator;
 
+        /// <summary>
+        /// Debug information from parsing. From <see cref="Foobricator.Tools.IDebugInfoProvider"/>
+        /// </summary>
         public DebugInfo DebugInfo { get; set; }
 
+        /// <summary>
+        /// Initialise a new instance against a reference
+        /// </summary>
         public When(DataReference reference, Op @operator, object rightHandSide)
             :this(reference.Dereference() as ISource, @operator, rightHandSide)
         {
         }
 
+        /// <summary>
+        /// Initalise a new instance against a source
+        /// </summary>
         public When(ISource source, Op @operator, object rightHandSide)
         {
             Source = source;
@@ -37,6 +77,9 @@ namespace Foobricator.Output
             Operator = @operator;
         }
 
+        /// <summary>
+        /// Tests the conditions and returns the result
+        /// </summary>
         public bool True()
         {
             object value = Source.GetItem();

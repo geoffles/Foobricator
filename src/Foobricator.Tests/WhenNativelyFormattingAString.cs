@@ -7,6 +7,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Foobricator.Tests
 {
+    /// <summary>
+    /// Tests when formatting a string
+    /// </summary>
     [TestClass]
     public class WhenNativelyFormattingAString
     {
@@ -28,6 +31,9 @@ namespace Foobricator.Tests
             }
         }
 
+        /// <summary>
+        /// Sample usage of custom formatting
+        /// </summary>
         [TestMethod]
         public void ThenCustomClassesShouldPrintProperly()
         {

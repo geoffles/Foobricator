@@ -6,13 +6,30 @@ using Foobricator.Tools;
 
 namespace Foobricator.RootOutput
 {
+    /// <summary>
+    /// Ouput to a file
+    /// </summary>
     public class FileOutput : IRootOutput, IDebugInfoProvider
     {
+        /// <summary>
+        /// Append to overwrite
+        /// </summary>
         public readonly bool Append;
         private bool _mustAppend = false;
+
+        /// <summary>
+        /// The filename
+        /// </summary>
         public readonly string Filename;
+
+        /// <summary>
+        /// Outputs which will be evaluated
+        /// </summary>
         public readonly IList<IOutput> Targets;
 
+        /// <summary>
+        /// Initialise a new instance
+        /// </summary>
         public FileOutput(string filename, IList<IOutput> targets, bool append)
         {
             Filename = filename;
@@ -24,6 +41,9 @@ namespace Foobricator.RootOutput
             }
         }
 
+        /// <summary>
+        /// Evaluates all outputs.
+        /// </summary>
         public void Evaluate()
         {
             using (var fileOut = new StreamWriter(Filename, _mustAppend))
@@ -34,6 +54,9 @@ namespace Foobricator.RootOutput
             _mustAppend = true;
         }
 
+        /// <summary>
+        /// Debug information from parsing. From <see cref="Foobricator.Tools.IDebugInfoProvider"/>
+        /// </summary>
         public DebugInfo DebugInfo { get; set; }
     }
 }

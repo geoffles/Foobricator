@@ -2,19 +2,55 @@
 
 namespace Foobricator.Tools
 {
+    /// <summary>
+    /// Interface for foobricator logging
+    /// </summary>
     public interface ILog
     {
+        /// <summary>
+        /// Include high detail on warnings
+        /// </summary>
         bool DebugInfoOnWarn { get; set;  }
 
+        /// <summary>
+        /// Print an information message
+        /// </summary>
         void Info(string message);
+        
+        /// <summary>
+        /// Print a format string information message
+        /// </summary>        
         void Info(string message, params object[] formatArgs);
-        void Trace(string message);
-        void Trace(string message, params object[] formatArgs);
-        void Warn(string message);
-        void Warn(string message, params object[] formatArgs);
-        void Error(string message);
-        void Error(string message, params object[] formatArgs);
 
+        /// <summary>
+        /// Print a trace message
+        /// </summary>
+        void Trace(string message);
+
+        /// <summary>
+        /// Print a format string trace message
+        /// </summary>
+        void Trace(string message, params object[] formatArgs);
+
+        /// <summary>
+        /// Print a warning message
+        /// </summary>
+        void Warn(string message);
+        
+        /// <summary>
+        /// Print a format string warning message
+        /// </summary>
+        void Warn(string message, params object[] formatArgs);
+
+        /// <summary>
+        /// Print an error message
+        /// </summary>
+        void Error(string message);
+        
+        /// <summary>
+        /// Print a format string error message
+        /// </summary>
+        void Error(string message, params object[] formatArgs);
     }
 
     class Log : ILog

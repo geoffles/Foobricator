@@ -23,6 +23,9 @@ namespace Foobricator.Sources
             Length = length;
         }
 
+        /// <summary>
+        /// Debug information from parsing. From <see cref="Foobricator.Tools.IDebugInfoProvider"/>
+        /// </summary>
         public DebugInfo DebugInfo { get; set; }
 
         public string ToString(string format, IFormatProvider formatProvider)
@@ -36,6 +39,9 @@ namespace Foobricator.Sources
             return str.PadLeft(Length, Character);
         }
 
+        /// <summary>
+        /// Returns the padded string. From <see cref="Foobricator.Sources.ISource"/>
+        /// </summary>
         public object GetItem()
         {
             object value = Source.GetItem();

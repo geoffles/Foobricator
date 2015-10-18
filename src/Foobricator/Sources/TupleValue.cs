@@ -23,11 +23,16 @@ namespace Foobricator.Sources
             Index = index;
         }
 
+        /// <summary>
+        /// Debug information from parsing. From <see cref="Foobricator.Tools.IDebugInfoProvider"/>
+        /// </summary>
         public DebugInfo DebugInfo { get; set; }
 
+        /// <summary>
+        /// Gets the object at <c>Index</c> for the <c>Source</c> list. From <see cref="Foobricator.Sources.ISource"/>
+        /// </summary>
         public object GetItem()
         {
-
             if (Source == null)
             {
                 return null;
